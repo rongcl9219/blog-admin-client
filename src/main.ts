@@ -2,5 +2,16 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
+import resetMessage from "@/utils/resetMessage";
 
-createApp(App).use(store).use(router).mount("#app");
+import ElementPlus from "element-plus";
+import "element-plus/theme-chalk/src/index.scss";
+import "@/style/theme/index.scss";
+import "@/style/reset.scss";
+import "@/assets/icon/iconfont.css";
+
+const app = createApp(App);
+
+app.config.globalProperties.$msg = resetMessage;
+
+app.use(ElementPlus, { size: "small" }).use(store).use(router).mount("#app");
