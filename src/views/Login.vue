@@ -69,7 +69,7 @@
                 </el-button>
                 <el-button
                     type="primary"
-                    @click="initSysAdmin"
+                    @click="initAdmin"
                     style="width: 100%; margin: 0"
                 >
                     初始化管理员
@@ -186,7 +186,7 @@ export default class Login extends Vue {
         }
     }
 
-    public async initSysAdmin() {
+    public initAdmin() {
         UserApi.initSysAdmin()
             .then((res) => {
                 this.$msg.success(
