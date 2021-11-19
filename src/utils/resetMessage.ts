@@ -22,7 +22,8 @@ const Message: any = (options: any) => {
 
 declare module '@vue/runtime-core' {
     export interface ComponentCustomProperties {
-        $msg: typeof Message
+        $msg: typeof Message;
+        $loading: any;
     }
 }
 

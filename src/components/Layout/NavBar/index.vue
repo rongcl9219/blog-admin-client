@@ -23,7 +23,7 @@
                 </template>
                 <template #dropdown>
                     <el-dropdown-menu class="user-dropdown">
-                        <el-dropdown-item>个人信息</el-dropdown-item>
+                        <el-dropdown-item @click="aClick">个人信息</el-dropdown-item>
                         <el-dropdown-item
                             @click="updatePasswordDialog.visible = true"
                             >修改密码</el-dropdown-item
@@ -95,6 +95,7 @@ import defaultUserImg from "@/assets/images/default_img/default_user.png";
 import Breadcrumb from "@/components/Layout/Breadcrumb/index.vue";
 import Hamburger from "@/components/Layout/Hamburger/index.vue";
 import ThemePicker from "@/components/ThemePicker/index.vue";
+import UploadAvatar from "@/components/UploadAvatar/index.vue";
 import { CaretBottom } from "@element-plus/icons";
 import { ElFormItemContext } from "element-plus";
 import { UserApi } from "@/api";
@@ -105,6 +106,7 @@ import { UserApi } from "@/api";
         Hamburger,
         CaretBottom,
         ThemePicker,
+        UploadAvatar,
     },
 })
 export default class NavBar extends Vue {
@@ -229,6 +231,15 @@ export default class NavBar extends Vue {
         });
     }
     /* endregion */
+
+    aClick() {
+        this.$loading({
+            lock: true,
+            text: "上传中...",
+            spinner: "el-icon-loading",
+            background: "rgba(0, 0, 0, 0.7)",
+        });
+    }
 }
 </script>
 
