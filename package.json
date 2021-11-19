@@ -8,11 +8,11 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@types/nprogress": "^0.2.0",
     "axios": "^0.24.0",
     "core-js": "^3.6.5",
     "element-plus": "^1.2.0-beta.3",
     "nprogress": "^0.2.0",
+    "path-to-regexp": "^6.2.0",
     "vue": "^3.0.0",
     "vue-class-component": "^8.0.0-0",
     "vue-router": "^4.0.0-0",
@@ -21,6 +21,8 @@
     "web-storage-cache": "^1.1.1"
   },
   "devDependencies": {
+    "@types/nprogress": "^0.2.0",
+    "@types/path-to-regexp": "^1.7.0",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",
     "@vue/cli-plugin-babel": "~4.5.0",

@@ -48,6 +48,15 @@ module.exports = {
             config.plugins.delete("prefetch");
         }
     },
+    css: {
+        extract: IS_PROD,
+        sourceMap: false,
+        loaderOptions: {
+            scss: {
+                prependData: `@use "@/style/transition.scss" as *;`
+            }
+        }
+    },
     devServer: {
         overlay: {
             // 让浏览器 overlay 同时显示警告和错误

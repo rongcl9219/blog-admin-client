@@ -21,18 +21,10 @@ router.beforeEach((to, from, next) => {
     if (to.meta.requiresAuth) {
         if (token) {
             const userInfo = store.state.user.username;
-            if (userInfo) {
-                next();
-            } else {
-                store
-                    .dispatch("user/getUserInfo")
-                    .then(() => {
-                        next();
-                    })
-                    .catch(() => {
-                        next();
-                    });
+            if (!userInfo) {
+                store.dispatch("user/getUserInfo").then().catch();
             }
+            next();
         } else {
             next({
                 path: "/login",

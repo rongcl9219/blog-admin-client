@@ -82,7 +82,6 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import { Action } from "vuex-class";
-import { useRouter } from "vue-router";
 import { ElFormItemContext } from "element-plus";
 import ValidCode from "@/components/ValidCode/index.vue";
 import { UserApi } from "@/api";
@@ -93,7 +92,6 @@ import { UserApi } from "@/api";
     },
 })
 export default class Login extends Vue {
-    private router = useRouter();
     @Action("user/login") login: any;
     @Action("user/loginOut") loginOut: any;
 
@@ -143,7 +141,7 @@ export default class Login extends Vue {
         if (event) {
             // 去除按钮聚焦，否则先点击按钮在按回车会重复触发事件
             let target = event.target;
-            if(target.nodeName === 'SPAN' || target.nodeName === 'I'){
+            if (target.nodeName === "SPAN" || target.nodeName === "I") {
                 target = event.target.parentNode;
             }
             target.blur();
@@ -166,7 +164,7 @@ export default class Login extends Vue {
 
                 this.login(data)
                     .then(() => {
-                        this.router.push("/");
+                        this.$router.push("/");
                     })
                     .catch((error: any) => {
                         this.$msg.error(error.msg);
@@ -190,11 +188,13 @@ export default class Login extends Vue {
 
     public async initSysAdmin() {
         UserApi.initSysAdmin()
-            .then(res => {
-                this.$msg.success(`初始化成功！用户名为：${res.data.username}，密码为：${res.data.password}`);
+            .then((res) => {
+                this.$msg.success(
+                    `初始化成功！用户名为：${res.data.username}，密码为：${res.data.password}`
+                );
             })
-            .catch(error => {
-                this.$msg.error(error.msg || "初始化失败")
+            .catch((error) => {
+                this.$msg.error(error.msg || "初始化失败");
             });
     }
 

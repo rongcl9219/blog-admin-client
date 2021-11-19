@@ -1,5 +1,12 @@
 <template>
-    <el-color-picker v-model="themeColor" @change="changeTheme" />
+    <div class="choose-theme">
+        <el-icon class="el-icon-third-theme"></el-icon>
+        <el-color-picker
+            class="theme-picker"
+            v-model="themeColor"
+            @change="changeTheme"
+        />
+    </div>
 </template>
 
 <script lang="ts">
@@ -25,4 +32,25 @@ export default class ThemePicker extends Vue {
 }
 </script>
 
-<style scoped></style>
+<style lang="scss">
+.choose-theme {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    color: var(--el-color-primary);
+
+    .el-icon-third-theme {
+        font-size: 24px;
+    }
+
+    .theme-picker {
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+    }
+}
+</style>
