@@ -2,154 +2,143 @@
     <el-dialog
         :show-close="false"
         width="600px"
-        v-model="uploadAvatarVisible"
+        v-model="dialogVisible"
         :close-on-press-escape="false"
         :close-on-click-modal="false"
+        :append-to-body="true"
     >
         <template #title>
             <div class="dialog-title">
                 <span>上传头像</span>
                 <el-button
-                    class="close_btn"
+                    class="close-btn"
                     type="text"
-                    icon="el-icon-close"
                     @click="closeUpLoadImg"
-                ></el-button>
+                >
+                    <el-icon><Close /></el-icon>
+                </el-button>
             </div>
         </template>
-        <div class="img-copper-wrapper">
-            <el-row type="flex">
-                <el-col :span="17">
-                    <div class="img-copper-left">
-                        <div class="img-copper-con">
-                            <img
-                                class="img-copper-img"
-                                ref="uploadImg"
-                                draggable="false"
-                                :src="sourceImgUrl"
-                                :style="sourceImgStyle"
-                                @drag="preventDefault"
-                                @dragstart="preventDefault"
-                                @dragend="preventDefault"
-                                @dragleave="preventDefault"
-                                @dragover="preventDefault"
-                                @dragenter="preventDefault"
-                                @drop="preventDefault"
-                                @touchstart="imgStartMove"
-                                @touchmove="imgMove"
-                                @touchend="createImg"
-                                @touchcancel="createImg"
-                                @mousedown="imgStartMove"
-                                @mousemove="imgMove"
-                                @mouseup="createImg"
-                                @mouseout="createImg"
-                                alt=""
-                            />
-                            <div
-                                :style="sourceImgShadeStyle"
-                                class="
-                                    img-copper-img-shade img-copper-img-shade-1
-                                "
-                            />
-                            <div
-                                :style="sourceImgShadeStyle"
-                                class="
-                                    img-copper-img-shade img-copper-img-shade-2
-                                "
-                            />
+        <template #default>
+            <div class="img-copper-wrapper">
+                <el-row type="flex">
+                    <el-col :span="17">
+                        <div class="img-copper-left">
+                            <div class="img-copper-con">
+                                <img
+                                    class="img-copper-img"
+                                    ref="uploadImg"
+                                    draggable="false"
+                                    :src="sourceImgUrl"
+                                    :style="sourceImgStyle"
+                                    @drag="preventDefault"
+                                    @dragstart="preventDefault"
+                                    @dragend="preventDefault"
+                                    @dragleave="preventDefault"
+                                    @dragover="preventDefault"
+                                    @dragenter="preventDefault"
+                                    @drop="preventDefault"
+                                    @mousedown="imgStartMove"
+                                    @mousemove="imgMove"
+                                    @mouseup="createImg"
+                                    @mouseout="createImg"
+                                    alt=""
+                                />
+                                <div
+                                    :style="sourceImgShadeStyle"
+                                    class="
+                                        img-copper-img-shade
+                                        img-copper-img-shade-1
+                                    "
+                                />
+                                <div
+                                    :style="sourceImgShadeStyle"
+                                    class="
+                                        img-copper-img-shade
+                                        img-copper-img-shade-2
+                                    "
+                                />
+                            </div>
+                            <div class="img-copper-range" v-show="rangeShow">
+                                <input
+                                    class="img-copper-scale-input"
+                                    :value="scale.range"
+                                    type="range"
+                                    step="1"
+                                    min="0"
+                                    max="100"
+                                    @input="zoomChange"
+                                />
+                                <i
+                                    class="img-copper-scale-down"
+                                    @mousedown="startZoomSub"
+                                    @mouseout="endZoomSub"
+                                    @mouseup="endZoomSub"
+                                />
+                                <i
+                                    class="img-copper-scale-plus"
+                                    @mousedown="startZoomAdd"
+                                    @mouseout="endZoomAdd"
+                                    @mouseup="endZoomAdd"
+                                />
+                            </div>
                         </div>
-                        <div class="img-copper-range" v-show="rangeShow">
-                            <input
-                                class="img-copper-scale-input"
-                                :value="scale.range"
-                                type="range"
-                                step="1"
-                                min="0"
-                                max="100"
-                                @input="zoomChange"
-                            />
-                            <i
-                                class="img-copper-scale-down"
-                                @mousedown="startZoomSub"
-                                @mouseout="endZoomSub"
-                                @mouseup="endZoomSub"
-                            />
-                            <i
-                                class="img-copper-scale-plus"
-                                @mousedown="startZoomAdd"
-                                @mouseout="endZoomAdd"
-                                @mouseup="endZoomAdd"
-                            />
+                    </el-col>
+                    <el-col :span="7">
+                        <div class="img-copper-right">
+                            <div class="size-one">
+                                <el-avatar shape="square" :size="100">
+                                    <img :src="createImgUrl" alt="" />
+                                </el-avatar>
+                                <span>方形预览</span>
+                            </div>
+                            <div class="size-two">
+                                <el-avatar :size="100">
+                                    <img :src="createImgUrl" alt="" />
+                                </el-avatar>
+                                <span>圆形预览</span>
+                            </div>
+                            <div class="upload-avatar">
+                                <input
+                                    v-show="false"
+                                    ref="fileInput"
+                                    type="file"
+                                    @change="fileChange"
+                                />
+                                <el-button
+                                    size="small"
+                                    type="primary"
+                                    @click.prevent="handleClick"
+                                    >上传</el-button
+                                >
+                                <el-button
+                                    style="margin-left: 5px"
+                                    size="small"
+                                    type="success"
+                                    @click.prevent="submitUpload"
+                                >
+                                    确定
+                                </el-button>
+                            </div>
                         </div>
-                        <div class="img-copper-rotate" v-if="noRotate">
-                            <i
-                                @mousedown="startRotateLeft"
-                                @mouseout="endRotate"
-                                @mouseup="endRotate"
-                                >↺</i
-                            >
-                            <i
-                                @mousedown="startRotateRight"
-                                @mouseout="endRotate"
-                                @mouseup="endRotate"
-                                >↻</i
-                            >
-                        </div>
-                    </div>
-                </el-col>
-                <el-col :span="7">
-                    <div class="img-copper-right">
-                        <div class="size-one">
-                            <el-avatar shape="square" :size="100">
-                                <img :src="createImgUrl" alt="" />
-                            </el-avatar>
-                            <span>方形预览</span>
-                        </div>
-                        <div class="size-two">
-                            <el-avatar :size="100">
-                                <img :src="createImgUrl" alt="" />
-                            </el-avatar>
-                            <span>圆形预览</span>
-                        </div>
-                        <div class="upload-avatar">
-                            <input
-                                v-show="false"
-                                ref="fileInput"
-                                type="file"
-                                @change="fileChange"
-                            />
-                            <el-button
-                                size="small"
-                                type="primary"
-                                @click="handleClick"
-                                >上传</el-button
-                            >
-                            <el-button
-                                style="margin-left: 5px"
-                                size="small"
-                                type="success"
-                                @click="submitUpload"
-                            >
-                                确定
-                            </el-button>
-                        </div>
-                    </div>
-                </el-col>
-            </el-row>
-            <canvas
-                v-show="false"
-                ref="canvas"
-                :width="width"
-                :height="height"
-            />
-        </div>
+                    </el-col>
+                </el-row>
+                <canvas
+                    v-show="false"
+                    ref="canvas"
+                    :width="width"
+                    :height="height"
+                />
+            </div>
+        </template>
     </el-dialog>
 </template>
 
 <script lang="ts">
-import { Vue, Options, prop } from "vue-class-component";
+import { Vue, Options, Prop, Ref, Emit, Watch } from "vue-property-decorator";
 import { Md5 } from "ts-md5/dist/md5";
 import { CommonApi } from "@/api";
+import { Close } from "@element-plus/icons";
 
 interface Scale {
     zoomAddOn: boolean; // 按钮缩放事件开启
@@ -179,48 +168,39 @@ interface SourceImgMouseDown {
     y: number;
 }
 
-class Props {
-    uploadAvatarVisible = prop<boolean>({ default: false });
-    width = prop<number>({ default: 200 });
-    height = prop<number>({ default: 200 });
-    noRotate = prop<boolean>({ default: false });
-    thumbnail = prop<string>({ default: "" });
-}
-
 @Options({
-    props: {
-        uploadAvatarVisible: {
-            type: Boolean,
-            default: false,
-        },
-        // 剪裁图片的宽
-        width: {
-            type: Number,
-            default: 200,
-        },
-        // 剪裁图片的高
-        height: {
-            type: Number,
-            default: 200,
-        },
-        noRotate: {
-            type: Boolean,
-            default: false,
-        },
-        thumbnail: {
-            type: String,
-            default: "",
-        },
-    },
-    watch: {
-        value(newValue) {
-            if (newValue && this.loading !== 1) {
-                this.reset();
-            }
-        },
+    components: {
+        Close,
     },
 })
-export default class UploadAvatar extends Vue.with<Props> {
+export default class UploadAvatar extends Vue {
+    @Prop({ default: false }) uploadAvatarVisible: boolean;
+    @Prop({ default: 200 }) width: number;
+    @Prop({ default: 200 }) height: number;
+    @Prop({ default: "" }) thumbnail: string;
+
+    @Ref() readonly fileInput!: HTMLInputElement;
+    @Ref() readonly canvas!: HTMLCanvasElement;
+
+    @Emit("crop-upload-success")
+    onCropUploadSuccess(fileObj: any) {
+        return fileObj;
+    }
+    @Emit("crop-upload-fail")
+    onCropUploadFail(error: any) {
+        return error;
+    }
+    @Emit("update:uploadAvatarVisible")
+    onUploadAvatarVisibleChanged(visible: boolean) {
+        return visible;
+    }
+
+    @Watch("uploadAvatarVisible")
+    onUploadAvatarVisible(val: boolean) {
+        this.dialogVisible = val;
+    }
+
+    public dialogVisible: boolean = false;
     public fileList: Array<any> = [];
     public sourceImgContainer = {
         // sic
@@ -255,8 +235,8 @@ export default class UploadAvatar extends Vue.with<Props> {
     };
     // 原图地址、生成图片地址
     public sourceImg: any = null;
-    public sourceImgUrl: string = "";
-    public createImgUrl: string = "";
+    public sourceImgUrl: any = "";
+    public createImgUrl: any = "";
 
     // 原图样式
     get sourceImgStyle() {
@@ -328,9 +308,8 @@ export default class UploadAvatar extends Vue.with<Props> {
         return width / height;
     }
 
-    handleClick(e: Event) {
-        e.preventDefault();
-        this.$refs.fileInput.click();
+    handleClick() {
+        this.fileInput.click();
     }
     isAssetTypeAnImage(ext: string) {
         return ["png", "jpg", "jpeg", "gif"].indexOf(ext.toLowerCase()) !== -1;
@@ -350,7 +329,7 @@ export default class UploadAvatar extends Vue.with<Props> {
     getBase64(file: any) {
         return new Promise(function (resolve, reject) {
             let reader = new FileReader();
-            let imgResult = "";
+            let imgResult: any;
             reader.readAsDataURL(file);
             reader.onload = function () {
                 imgResult = reader.result;
@@ -363,11 +342,12 @@ export default class UploadAvatar extends Vue.with<Props> {
             };
         });
     }
-    fileChange(e: Event) {
+    fileChange(e: InputEvent) {
         e.preventDefault();
-        const files = e.target.files || e.dataTransfer.files;
+        const target = e.target as HTMLInputElement;
+        const files: any = target.files;
         this.reset();
-        const file = files[0];
+        const file: any = files[0];
 
         // 获取最后一个.的位置
         let index = file.name.lastIndexOf(".");
@@ -425,13 +405,13 @@ export default class UploadAvatar extends Vue.with<Props> {
                             key: key,
                             url: data.url,
                         };
-                        this.$emit("crop-upload-success", fileObj);
+                        this.onCropUploadSuccess(fileObj);
                     })
-                    .catch((err) => {
-                        this.$emit("crop-upload-fail", err);
+                    .catch((error) => {
+                        this.onCropUploadFail(error);
                     })
                     .finally(() => {
-                        this.$emit("update:uploadAvatarVisible", false);
+                        this.onUploadAvatarVisibleChanged(false);
                         uploadLoading.close();
                     });
             })
@@ -441,7 +421,7 @@ export default class UploadAvatar extends Vue.with<Props> {
             });
     }
     closeUpLoadImg() {
-        this.$emit("update:uploadAvatarVisible", false);
+        this.onUploadAvatarVisibleChanged(false);
         this.reset();
     }
     reset() {
@@ -525,37 +505,27 @@ export default class UploadAvatar extends Vue.with<Props> {
         };
     }
     // 鼠标按下图片准备移动
-    imgStartMove(e: Event) {
+    imgStartMove(e: MouseEvent) {
         e.preventDefault();
-        // 支持触摸事件，则鼠标事件无效
-        if (this.isSupportTouch && !e.targetTouches) {
-            return false;
-        }
-        const et = e.targetTouches ? e.targetTouches[0] : e;
         const { sourceImgMouseDown, scale } = this;
         const simd = sourceImgMouseDown;
-        simd.mX = et.screenX;
-        simd.mY = et.screenY;
+        simd.mX = e.screenX;
+        simd.mY = e.screenY;
         simd.x = scale.x;
         simd.y = scale.y;
         simd.on = true;
     }
     // 鼠标按下状态下移动，图片移动
-    imgMove(e: Event) {
+    imgMove(e: MouseEvent) {
         e.preventDefault();
-        // 支持触摸事件，则鼠标事件无效
-        if (this.isSupportTouch && !e.targetTouches) {
-            return false;
-        }
-        const et = e.targetTouches ? e.targetTouches[0] : e;
         const {
             sourceImgMouseDown: { on, mX, mY, x, y },
             scale,
             sourceImgMasking,
         } = this;
         const sim = sourceImgMasking;
-        const nX = et.screenX;
-        const nY = et.screenY;
+        const nX = e.screenX;
+        const nY = e.screenY;
         const dX = nX - mX;
         const dY = nY - mY;
         let rX = x + dX;
@@ -575,42 +545,6 @@ export default class UploadAvatar extends Vue.with<Props> {
         }
         scale.x = rX;
         scale.y = rY;
-    }
-    // 按钮按下开始向右旋转
-    startRotateRight() {
-        const { scale } = this;
-        scale.rotateRight = true;
-        const rotate = () => {
-            if (scale.rotateRight) {
-                const degree = ++scale.degree;
-                this.createImg(degree);
-                setTimeout(function () {
-                    rotate();
-                }, 60);
-            }
-        };
-        rotate();
-    }
-    // 按钮按下开始向左旋转
-    startRotateLeft() {
-        const { scale } = this;
-        scale.rotateLeft = true;
-        const rotate = () => {
-            if (scale.rotateLeft) {
-                const degree = --scale.degree;
-                this.createImg(degree);
-                setTimeout(function () {
-                    rotate();
-                }, 60);
-            }
-        };
-        rotate();
-    }
-    // 停止旋转
-    endRotate() {
-        const { scale } = this;
-        scale.rotateLeft = false;
-        scale.rotateRight = false;
     }
     // 按钮按下开始放大
     startZoomAdd() {
@@ -651,7 +585,7 @@ export default class UploadAvatar extends Vue.with<Props> {
         const { scale } = this;
         scale.zoomSubOn = false;
     }
-    zoomChange(e) {
+    zoomChange(e: any) {
         this.zoomImg(e.target.value);
     }
     // 缩放原图
@@ -703,14 +637,14 @@ export default class UploadAvatar extends Vue.with<Props> {
         }, 300);
     }
     // 生成需求图片
-    createImg(e: Event) {
+    createImg(e?: Event | number) {
         const {
             sourceImg,
             scale: { x, y, width, height, degree },
             sourceImgMasking: { scale },
         } = this;
-        const canvas = this.$refs.canvas;
-        const ctx = canvas.getContext("2d");
+        const canvas = this.canvas;
+        const ctx: any = canvas.getContext("2d");
         if (e) {
             // 取消鼠标按下移动状态
             this.sourceImgMouseDown.on = false;
@@ -742,7 +676,7 @@ export default class UploadAvatar extends Vue.with<Props> {
     justify-content: space-between;
     align-items: center;
 
-    .close_btn {
+    .close-btn {
         font-size: 16px;
         padding: 0;
     }
@@ -762,6 +696,8 @@ export default class UploadAvatar extends Vue.with<Props> {
             .img-copper-img {
                 position: absolute;
                 display: block;
+                max-width: none;
+                max-height: none;
                 cursor: move;
                 user-select: none;
             }

@@ -23,7 +23,9 @@
                 </template>
                 <template #dropdown>
                     <el-dropdown-menu class="user-dropdown">
-                        <el-dropdown-item @click="aClick">个人信息</el-dropdown-item>
+                        <el-dropdown-item @click="handleOpenUserInfoDialog"
+                            >个人信息</el-dropdown-item
+                        >
                         <el-dropdown-item
                             @click="updatePasswordDialog.visible = true"
                             >修改密码</el-dropdown-item
@@ -38,6 +40,7 @@
     </div>
 
     <el-dialog
+        title="修改密码"
         v-model="updatePasswordDialog.visible"
         @close="closeUpdatePasswordDialog"
         :close-on-press-escape="false"
@@ -78,14 +81,71 @@
                 <el-button @click="updatePasswordDialog.visible = false"
                     >取 消</el-button
                 >
+                <el-button type="primary" @click="updatePass">确 定</el-button>
+            </div>
+        </template>
+    </el-dialog>
+
+    <el-dialog
+        title="个人信息"
+        @close="closeUserInfoDialog('updateUserInfoForm')"
+        v-model="userInfoDialog.visible"
+        :close-on-press-escape="false"
+        :append-to-body="true"
+        :close-on-click-modal="false"
+    >
+        <el-form
+            ref="updateUserInfoForm"
+            :model="userInfoDialog.userInfoForm"
+            status-icon
+            label-width="80px"
+        >
+            <el-form-item label="头像">
+                <el-avatar
+                    style="float: left; margin-right: 10px"
+                    shape="square"
+                    :size="50"
+                >
+                    <img :src="userInfoDialog.userInfoForm.avatarUrl" alt="" />
+                </el-avatar>
+                <el-button type="primary" @click="uploadAvatarVisible = true"
+                    >上传头像</el-button
+                >
+            </el-form-item>
+            <el-form-item label="邮箱">
+                <el-input
+                    v-model="userInfoDialog.userInfoForm.email"
+                    autocomplete="off"
+                ></el-input>
+            </el-form-item>
+            <el-form-item label="个性签名">
+                <el-input
+                    type="textarea"
+                    :autosize="{ minRows: 2, maxRows: 5 }"
+                    v-model="userInfoDialog.userInfoForm.signature"
+                    autocomplete="off"
+                ></el-input>
+            </el-form-item>
+        </el-form>
+        <template v-slot:footer>
+            <div class="dialog-footer">
+                <el-button @click="userInfoDialog.visible = false"
+                    >取 消</el-button
+                >
                 <el-button
                     type="primary"
-                    @click="updatePass"
+                    @click="handleUpdateUserInfo('updateUserInfoForm')"
                     >确 定</el-button
                 >
             </div>
         </template>
     </el-dialog>
+
+    <upload-avatar
+        thumbnail="avatar"
+        @crop-upload-success="uploadAvatarSuccess"
+        v-model:upload-avatar-visible="uploadAvatarVisible"
+    ></upload-avatar>
 </template>
 
 <script lang="ts">
@@ -232,14 +292,69 @@ export default class NavBar extends Vue {
     }
     /* endregion */
 
-    aClick() {
-        this.$loading({
+    /* region 个人信息 */
+    @Action("user/setUserAvatar") setUserAvatar: any;
+    public userInfoDialog = {
+        visible: false,
+        userInfoForm: {
+            avatar: "",
+            signature: "",
+            email: "",
+            avatarUrl: "",
+            userId: "",
+        },
+    };
+    public uploadAvatarVisible: boolean = false;
+    handleOpenUserInfoDialog() {
+        this.userInfoDialog.visible = true;
+        UserApi.getUserInfo()
+            .then((res) => {
+                this.userInfoDialog.userInfoForm = res.data.userInfo;
+            })
+            .catch((err) => {
+                this.$msg.error(err.msg || err.message);
+            });
+    }
+    closeUserInfoDialog(formName: string) {
+        (
+            this.$refs[formName] as ElFormItemContext & {
+                resetFields: any;
+            }
+        ).resetFields();
+    }
+    handleUpdateUserInfo() {
+        const updateLoading = this.$loading({
             lock: true,
-            text: "上传中...",
+            text: "保存中...",
             spinner: "el-icon-loading",
             background: "rgba(0, 0, 0, 0.7)",
         });
+
+        let data = {
+            avatar: this.userInfoDialog.userInfoForm.avatar,
+            signature: this.userInfoDialog.userInfoForm.signature,
+            email: this.userInfoDialog.userInfoForm.email,
+            userId: this.userInfoDialog.userInfoForm.userId,
+        };
+
+        UserApi.updateUserInfo(data)
+            .then(() => {
+                this.$msg.success("修改成功");
+                this.setUserAvatar(this.userInfoDialog.userInfoForm.avatarUrl);
+                this.userInfoDialog.visible = false;
+            })
+            .catch(() => {
+                this.$msg.error("修改失败");
+            })
+            .finally(() => {
+                updateLoading.close();
+            });
     }
+    uploadAvatarSuccess(fileObj: any) {
+        this.userInfoDialog.userInfoForm.avatar = fileObj.key;
+        this.userInfoDialog.userInfoForm.avatarUrl = fileObj.url;
+    }
+    /* endregion */
 }
 </script>
 

@@ -180,8 +180,10 @@ export default class Login extends Vue {
         });
     }
 
-    public handleKeyup(e: any) {
-        if (e.keyCode === 13 && e.target.baseURI.match(/login/)) {
+    public handleKeyup(e: KeyboardEvent) {
+        // 将target装换为对应的HTML元素
+        const target = e.target as HTMLBodyElement;
+        if (e.keyCode === 13 && target.baseURI.match(/login/)) {
             this.handleLogin("loginForm"); // 调用登录 验证方法
         }
     }

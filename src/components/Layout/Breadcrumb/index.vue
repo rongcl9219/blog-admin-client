@@ -22,16 +22,10 @@
 </template>
 
 <script lang="ts">
-import { Vue, Options } from "vue-class-component";
+import { Vue, Options, Watch } from "vue-property-decorator";
 import * as pathToRegexp from "path-to-regexp";
 
-@Options({
-    watch: {
-        $route() {
-            this.getBreadcrumb();
-        },
-    },
-})
+@Options({})
 export default class Breadcrumb extends Vue {
     public levelList: Array<any> = [];
 
@@ -78,6 +72,11 @@ export default class Breadcrumb extends Vue {
         const { params } = this.$route;
         let toPath = pathToRegexp.compile(path);
         return toPath(params);
+    }
+
+    @Watch("$route")
+    onRouteChanged() {
+        this.getBreadcrumb();
     }
 
     created() {

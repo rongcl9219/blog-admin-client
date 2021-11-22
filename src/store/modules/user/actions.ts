@@ -70,6 +70,9 @@ const actions: ActionTree<UserState, RootState> = {
                 });
         });
     },
+    setUserAvatar({commit}: {commit: Commit}, avatarUrl: string): void {
+        commit(SET_AVATAR, avatarUrl)
+    }
 };
 
 export default actions;

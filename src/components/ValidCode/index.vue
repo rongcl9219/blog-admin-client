@@ -1,7 +1,7 @@
 <template>
     <div
         class="valid-code-box"
-        :style="`width:${width}; height:${height}`"
+        :style="`width:${width}px; height:${height}px`"
         @click="getCode"
     >
         <span
@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from "vue-class-component";
+import { Vue, Options, Prop, Watch, Emit } from "vue-property-decorator";
 import { CommonApi } from "@/api";
 
 interface ValidCodeItem {
@@ -25,36 +25,19 @@ interface ValidCodeItem {
     transform: string;
 }
 
-@Options({
-    props: {
-        validCode: {
-            type: String,
-            default: "",
-        },
-        width: {
-            type: String,
-            default: "150px",
-        },
-        height: {
-            type: String,
-            default: "40px",
-        },
-        length: {
-            type: Number,
-            default: 4,
-        },
-        refresh: {
-            type: Number,
-            default: 0,
-        },
-    },
-    watch: {
-        refresh() {
-            this.getCode();
-        },
-    },
-})
+@Options({})
 export default class ValidCode extends Vue {
+    @Prop({ type: String, default: "" }) validCode: string;
+    @Prop({ type: Number, default: 150 }) width: number;
+    @Prop({ type: Number, default: 40 }) height: number;
+    @Prop({ type: Number, default: 4 }) length: number;
+    @Prop({ type: Number, default: 0 }) refresh: number;
+
+    @Watch("refresh")
+    onRefreshChanged() {
+        this.getCode();
+    }
+
     public codeList: Array<ValidCodeItem> = [];
 
     public getCode() {
@@ -69,7 +52,7 @@ export default class ValidCode extends Vue {
 
     private createCode(codeArr: string[]) {
         let codeList: Array<ValidCodeItem> = [];
-        // 生成
+
         codeArr.forEach((code: string) => {
             const rgb = [
                 Math.round(Math.random() * 200),
@@ -87,13 +70,16 @@ export default class ValidCode extends Vue {
                 }deg)`,
             });
         });
-        // 指向
+
         this.codeList = codeList;
-        // 将当前数据派发出去
-        this.$emit(
-            "update:validCode",
-            codeList.map((item: ValidCodeItem) => item.code).join("")
-        );
+
+        this.onValidCodeChanged();
+    }
+
+    // 将当前数据派发出去
+    @Emit("update:validCode")
+    onValidCodeChanged() {
+        return this.codeList.map((item: ValidCodeItem) => item.code).join("");
     }
 
     public getStyle(data: any) {

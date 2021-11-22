@@ -16,17 +16,12 @@
 </template>
 
 <script lang="ts">
-import { Vue, Options } from "vue-class-component";
+import { Vue, Options, Prop } from "vue-property-decorator";
 
-@Options({
-    props: {
-        isActive: {
-            type: Boolean,
-            default: false,
-        },
-    },
-})
+@Options({})
 export default class Hamburger extends Vue {
+    @Prop({type: Boolean, default: false}) isActive: boolean;
+
     toggleClick() {
         this.$emit("toggleClick");
     }
