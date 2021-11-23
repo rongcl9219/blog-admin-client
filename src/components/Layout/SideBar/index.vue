@@ -46,15 +46,10 @@
 <script lang="ts">
 import { Vue, Options } from "vue-class-component";
 import { Getter } from "vuex-class";
-import variables from '@/style/variables.scss'
 
 @Options({})
 export default class SideBar extends Vue {
     @Getter("setting/getSidebarOpen") isSidebarOpen: any;
-
-    get variables() {
-        return variables;
-    }
 
     get defaultPath() {
         return this.$route.path;

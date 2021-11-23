@@ -38,7 +38,6 @@ export default class AdminLayout extends Vue {
 
 <style scoped lang="scss">
 @import '~@/style/mixin.scss';
-@import '~@/style/variables.scss';
 
 .app-wrapper {
     @include clearfix;
@@ -65,7 +64,7 @@ export default class AdminLayout extends Vue {
     top: 0;
     right: 0;
     z-index: 9;
-    width: calc(100% - #{$sideBarWidth});
+    width: calc(100% - 210px);
     transition: width 0.28s;
 }
 
