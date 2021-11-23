@@ -11,7 +11,7 @@
             >
                 <el-form-item prop="username">
                     <span class="login-icon">
-                        <i class="el-icon-third-yonghu"></i>
+                        <svg-icon icon-class="user" />
                     </span>
                     <el-input
                         v-model="loginFormModel.username"
@@ -21,7 +21,7 @@
                 </el-form-item>
                 <el-form-item prop="password">
                     <span class="login-icon">
-                        <i class="el-icon-third-lock"></i>
+                        <svg-icon icon-class="password" />
                     </span>
                     <el-input
                         :key="passwordType"
@@ -45,7 +45,7 @@
                 <el-form-item prop="validCode">
                     <div style="display: flex; align-items: center">
                         <span class="login-icon" style="margin-right: 5px">
-                            <i class="el-icon-third-yanzhengma"></i>
+                            <svg-icon icon-class="verification-code" />
                         </span>
                         <el-input
                             v-model="loginFormModel.validCode"

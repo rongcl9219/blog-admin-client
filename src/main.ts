@@ -8,7 +8,6 @@ import ElementPlus from "element-plus";
 import "element-plus/theme-chalk/src/index.scss";
 import "@/style/theme/index.scss";
 import "@/style/reset.scss";
-import "@/assets/icon/iconfont.css";
 
 import "@/svg";
 import SvgIcon from "@/components/SvgIcon/index.vue";

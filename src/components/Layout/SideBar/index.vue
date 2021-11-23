@@ -9,31 +9,31 @@
                 :router="true"
                 mode="vertical">
                 <el-menu-item index="/main" :class="{'submenu-title-noDropdown': isSidebarOpen}">
-                    <i class="el-icon-third-shouye"></i>
+                    <svg-icon icon-class="home-page"/>
                     <template #title>
                         <span>主页</span>
                     </template>
                 </el-menu-item>
                 <el-menu-item index="/class" :class="{'submenu-title-noDropdown': isSidebarOpen}">
-                    <i class="el-icon-third-fenleiguanli"></i>
+                    <svg-icon icon-class="class-manage"/>
                     <template #title>
                         <span>分类管理</span>
                     </template>
                 </el-menu-item>
                 <el-menu-item index="/tag" :class="{'submenu-title-noDropdown': isSidebarOpen}">
-                    <i class="el-icon-third-biaoqian"></i>
+                    <svg-icon icon-class="tag"/>
                     <template #title>
                         <span>标签管理</span>
                     </template>
                 </el-menu-item>
                 <el-menu-item index="/article" :class="{'submenu-title-noDropdown': isSidebarOpen}">
-                    <i class="el-icon-third-svgwrite"></i>
+                    <svg-icon icon-class="article-manage"/>
                     <template #title>
                         <span>文章管理</span>
                     </template>
                 </el-menu-item>
                 <el-menu-item index="/webInfo" :class="{'submenu-title-noDropdown': isSidebarOpen}">
-                    <i class="el-icon-third-xin"></i>
+                    <svg-icon icon-class="heart"/>
                     <template #title>
                         <span>网站信息</span>
                     </template>

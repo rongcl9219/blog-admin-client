@@ -29,7 +29,7 @@
         }
 
         .el-scrollbar__bar.is-vertical {
-            right: 0px;
+            right: 0;
         }
 
         .el-scrollbar {
@@ -52,7 +52,8 @@
             overflow: hidden;
         }
 
-        .sub-el-icon {
+        .svg-icon {
+            font-size: 18px;
             margin-right: 12px;
             margin-left: -2px;
         }
@@ -92,7 +93,7 @@
 // when menu collapsed
 .el-menu--vertical {
     & > .el-menu {
-        .sub-el-icon {
+        .svg-icon {
             margin-right: 12px;
             margin-left: -2px;
         }
