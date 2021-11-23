@@ -38,6 +38,9 @@
                 </el-form-item>
             </el-form>
         </div>
+        <div style="margin: 10px 0;">
+            <svg-icon icon-class="user" @click="testClick" />
+        </div>
     </div>
 </template>
 
@@ -69,6 +72,9 @@ export default class Main extends Vue {
                 trigger: 'blur',
             },
         ],
+    }
+    testClick() {
+        console.log(1);
     }
 }
 </script>

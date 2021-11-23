@@ -10,8 +10,11 @@ import "@/style/theme/index.scss";
 import "@/style/reset.scss";
 import "@/assets/icon/iconfont.css";
 
+import "@/svg";
+import SvgIcon from "@/components/SvgIcon/index.vue";
+
 const app = createApp(App);
 
 app.config.globalProperties.$msg = resetMessage;
 
-app.use(ElementPlus, { size: "small" }).use(store).use(router).mount("#app");
+app.component('svg-icon', SvgIcon).use(ElementPlus, { size: "small" }).use(store).use(router).mount("#app");
