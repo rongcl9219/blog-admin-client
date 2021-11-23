@@ -144,6 +144,7 @@
     <upload-avatar
         thumbnail="avatar"
         @crop-upload-success="uploadAvatarSuccess"
+        @crop-upload-fail="uploadAvatarFail"
         v-model:upload-avatar-visible="uploadAvatarVisible"
     ></upload-avatar>
 </template>
@@ -351,8 +352,12 @@ export default class NavBar extends Vue {
             });
     }
     uploadAvatarSuccess(fileObj: any) {
+        this.$msg.success("上传成功");
         this.userInfoDialog.userInfoForm.avatar = fileObj.key;
         this.userInfoDialog.userInfoForm.avatarUrl = fileObj.url;
+    }
+    uploadAvatarFail(error: any) {
+        this.$msg.error(error.msg || "上传失败");
     }
     /* endregion */
 }

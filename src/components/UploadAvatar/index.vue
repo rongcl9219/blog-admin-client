@@ -1,24 +1,13 @@
 <template>
     <el-dialog
-        :show-close="false"
+        title="上传头像"
         width="600px"
         v-model="dialogVisible"
         :close-on-press-escape="false"
         :close-on-click-modal="false"
         :append-to-body="true"
+        @closed="closeUpLoadImg"
     >
-        <template #title>
-            <div class="dialog-title">
-                <span>上传头像</span>
-                <el-button
-                    class="close-btn"
-                    type="text"
-                    @click="closeUpLoadImg"
-                >
-                    <el-icon><Close /></el-icon>
-                </el-button>
-            </div>
-        </template>
         <template #default>
             <div class="img-copper-wrapper">
                 <el-row type="flex">
@@ -146,7 +135,6 @@ interface Scale {
     range: number; // 最大100
     rotateLeft: boolean; // 按钮向左旋转事件开启
     rotateRight: boolean; // 按钮向右旋转事件开启
-    degree: number; // 旋转度数
     x: number;
     y: number;
     width: number;
@@ -213,7 +201,6 @@ export default class UploadAvatar extends Vue {
         range: 1,
         rotateLeft: false,
         rotateRight: false,
-        degree: 0,
         x: 0,
         y: 0,
         width: 0,
@@ -248,11 +235,6 @@ export default class UploadAvatar extends Vue {
             left,
             width: scale.width + "px",
             height: scale.height + "px",
-            transform: "rotate(" + scale.degree + "deg)", // 旋转时 左侧原始图旋转样式
-            "-ms-transform": "rotate(" + scale.degree + "deg)", // 兼容IE9
-            "-moz-transform": "rotate(" + scale.degree + "deg)", // 兼容FireFox
-            "-webkit-transform": "rotate(" + scale.degree + "deg)", // 兼容Safari 和 chrome
-            "-o-transform": "rotate(" + scale.degree + "deg)", // 兼容 Opera
         };
     }
     // 原图蒙版属性
@@ -411,12 +393,13 @@ export default class UploadAvatar extends Vue {
                         this.onCropUploadFail(error);
                     })
                     .finally(() => {
-                        this.onUploadAvatarVisibleChanged(false);
-                        uploadLoading.close();
+                        this.closeUpLoadImg();
                     });
             })
             .catch((err) => {
                 this.$msg.error(err.msg || "获取上传token失败");
+            })
+            .finally(() => {
                 uploadLoading.close();
             });
     }
@@ -431,7 +414,6 @@ export default class UploadAvatar extends Vue {
             range: 1, // 最大100
             rotateLeft: false, // 按钮向左旋转事件开启
             rotateRight: false, // 按钮向右旋转事件开启
-            degree: 0, // 旋转度数
             x: 0,
             y: 0,
             width: 0,
@@ -493,7 +475,6 @@ export default class UploadAvatar extends Vue {
             scale.y = y;
             scale.width = w;
             scale.height = h;
-            scale.degree = 0;
             scale.minWidth = w;
             scale.minHeight = h;
             scale.maxWidth = nWidth * sim.scale;
@@ -640,7 +621,7 @@ export default class UploadAvatar extends Vue {
     createImg(e?: Event | number) {
         const {
             sourceImg,
-            scale: { x, y, width, height, degree },
+            scale: { x, y, width, height },
             sourceImgMasking: { scale },
         } = this;
         const canvas = this.canvas;
@@ -656,7 +637,6 @@ export default class UploadAvatar extends Vue {
         ctx.fillStyle = "#fff";
         ctx.fillRect(0, 0, this.width, this.height);
         ctx.translate(this.width * 0.5, this.height * 0.5);
-        ctx.rotate((Math.PI * degree) / 180);
         ctx.translate(-this.width * 0.5, -this.height * 0.5);
         ctx.drawImage(
             sourceImg,
@@ -671,17 +651,6 @@ export default class UploadAvatar extends Vue {
 </script>
 
 <style scoped lang="scss">
-.dialog-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .close-btn {
-        font-size: 16px;
-        padding: 0;
-    }
-}
-
 .img-copper-wrapper {
     .img-copper-left {
         height: 360px;
@@ -912,43 +881,6 @@ export default class UploadAvatar extends Vue {
                     width: 2px;
                     height: 12px;
                     background-color: #fff;
-                }
-            }
-        }
-
-        .img-copper-rotate {
-            position: relative;
-            width: 300px;
-            height: 20px;
-            margin: 20px auto;
-
-            i {
-                position: absolute;
-                top: 0;
-                width: 18px;
-                height: 18px;
-                border-radius: 100%;
-                line-height: 18px;
-                text-align: center;
-                font-size: 12px;
-                font-weight: bold;
-                background-color: rgba(0, 0, 0, 0.08);
-                color: #fff;
-                overflow: hidden;
-
-                &:hover {
-                    -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12);
-                    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12);
-                    cursor: pointer;
-                    background-color: rgba(0, 0, 0, 0.14);
-                }
-
-                &:first-child {
-                    left: 6px;
-                }
-
-                &:last-child {
-                    right: 6px;
                 }
             }
         }

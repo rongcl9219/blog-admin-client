@@ -201,7 +201,11 @@ export default class Login extends Vue {
     }
 
     created() {
-        this.loginOut().then().catch();
+        this.loginOut()
+            .then()
+            .catch((error: any) => {
+                console.error(error);
+            });
 
         document.addEventListener("keyup", this.handleKeyup);
     }
