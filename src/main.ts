@@ -16,4 +16,8 @@ const app = createApp(App);
 
 app.config.globalProperties.$msg = resetMessage;
 
-app.component('svg-icon', SvgIcon).use(ElementPlus, { size: "small" }).use(store).use(router).mount("#app");
+app.component("svg-icon", SvgIcon)
+    .use(ElementPlus, { size: "small" })
+    .use(store)
+    .use(router)
+    .mount("#app");
