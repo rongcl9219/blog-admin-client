@@ -3,9 +3,7 @@
  */
 // 后台布局
 const AdminLayout = () =>
-    import(
-        /* webpackChunkName: "layout" */ "@/components/Layout/index.vue"
-    );
+    import(/* webpackChunkName: "layout" */ "@/components/Layout/index.vue");
 
 // 后台首页
 const AdminMain = () =>
@@ -13,9 +11,7 @@ const AdminMain = () =>
 
 // 分类管理页面
 const AdminClass = () =>
-    import(
-        /* webpackChunkName: "class" */ "@/views/Class/index.vue"
-    );
+    import(/* webpackChunkName: "class" */ "@/views/Class/index.vue");
 
 // 标签管理页面
 const AdminTag = () =>
@@ -23,15 +19,14 @@ const AdminTag = () =>
 
 // 文章管理页面
 const AdminArticle = () =>
-    import(
-        /* webpackChunkName: "article" */ "@/views/Article/index.vue"
-    );
+    import(/* webpackChunkName: "article" */ "@/views/Article/index.vue");
 
 // 网站信息管理页面
 const AdminWebInfo = () =>
-    import(
-        /* webpackChunkName: "web-info" */ "@/views/WebInfo/index.vue"
-    );
+    import(/* webpackChunkName: "web-info" */ "@/views/WebInfo/index.vue");
+
+const AdminIcons = () =>
+    import(/* webpackChunkName: "web-info" */ "@/views/Icons/index.vue");
 
 export default [
     {
@@ -88,6 +83,15 @@ export default [
                 meta: {
                     requiresAuth: true,
                     title: "网站信息",
+                },
+            },
+            {
+                path: "icons",
+                name: "AdminIcons",
+                component: AdminIcons,
+                meta: {
+                    requiresAuth: true,
+                    title: "图标",
                 },
             },
         ],

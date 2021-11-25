@@ -1,6 +1,6 @@
 <template>
     <div class="choose-theme">
-        <el-icon class="el-icon-third-theme"></el-icon>
+        <svg-icon icon-class="theme"></svg-icon>
         <el-color-picker
             class="theme-picker"
             v-model="themeColor"
@@ -42,7 +42,7 @@ export default class ThemePicker extends Vue {
     height: 32px;
     color: var(--el-color-primary);
 
-    .el-icon-third-theme {
+    .svg-icon {
         font-size: 24px;
     }
 

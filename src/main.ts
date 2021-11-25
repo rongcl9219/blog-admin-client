@@ -10,6 +10,7 @@ import "@/style/theme/index.scss";
 import "@/style/reset.scss";
 
 import "@/svg";
+
 import SvgIcon from "@/components/SvgIcon/index.vue";
 
 const app = createApp(App);

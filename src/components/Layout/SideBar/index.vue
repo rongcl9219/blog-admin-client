@@ -38,6 +38,12 @@
                         <span>网站信息</span>
                     </template>
                 </el-menu-item>
+                <el-menu-item index="/icons" :class="{'submenu-title-noDropdown': isSidebarOpen}">
+                    <svg-icon icon-class="icon-img"/>
+                    <template #title>
+                        <span>图标</span>
+                    </template>
+                </el-menu-item>
             </el-menu>
         </el-scrollbar>
     </div>
