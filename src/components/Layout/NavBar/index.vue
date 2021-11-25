@@ -88,7 +88,7 @@
 
     <el-dialog
         title="个人信息"
-        @close="closeUserInfoDialog()"
+        @close="closeUserInfoDialog"
         v-model="userInfoDialog.visible"
         :close-on-press-escape="false"
         :append-to-body="true"

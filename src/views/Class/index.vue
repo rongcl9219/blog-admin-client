@@ -93,7 +93,7 @@
             v-model="classDialog.dialogVisible"
             :close-on-click-modal="false"
             :close-on-press-escape="false"
-            @close="closeClassDiaLog()"
+            @close="closeClassDiaLog"
             width="50%"
         >
             <el-form
@@ -147,7 +147,7 @@
                     >
                     <el-button
                         type="primary"
-                        @click="saveClass()"
+                        @click="saveClass"
                         :loading="classDialog.saveFlag"
                         >{{
                             classDialog.saveFlag ? "保存中..." : "保 存"
