@@ -54,7 +54,7 @@
                         size="small"
                         @click="openClassDialog(true)"
                     >
-                        <el-icon><CirclePlus/></el-icon>
+                        <el-icon><CirclePlus /></el-icon>
                         新增分类
                     </el-button>
                 </template>
@@ -62,22 +62,30 @@
                     <el-button
                         type="text"
                         size="small"
-                        icon="el-icon-edit"
                         @click="openClassDialog(false, scope.row.classId)"
                     >
-                        修改
+                        <el-icon><Edit /></el-icon>修改
                     </el-button>
                     <el-button
                         type="text"
                         size="small"
-                        icon="el-icon-delete"
-                        style="color: red"
+                        style="color: #ff0000"
                         @click="removeClass(scope.row.classId)"
-                        >删除
+                        ><el-icon><Delete /></el-icon>删除
                     </el-button>
                 </template>
             </el-table-column>
         </el-table>
+        <el-pagination
+            style="margin: 30px auto; text-align: center"
+            background
+            layout="prev, pager, next"
+            :page-size="pagination.pageSize"
+            v-model:current-page="pagination.page"
+            :total="pagination.total"
+            @current-change="currentChange"
+        >
+        </el-pagination>
 
         <!--   新增分类弹窗   -->
         <el-dialog
@@ -85,39 +93,66 @@
             v-model="classDialog.dialogVisible"
             :close-on-click-modal="false"
             :close-on-press-escape="false"
-            @close="closeClassDiaLog('classFormRef')"
-            width="50%">
-            <el-form :model="classForm" status-icon :rules="formRules"
-                     v-loading="classDialog.loading"
-                     ref="classFormRef" label-width="100px">
+            @close="closeClassDiaLog()"
+            width="50%"
+        >
+            <el-form
+                :model="classForm"
+                status-icon
+                :rules="formRules"
+                v-loading="classDialog.loading"
+                ref="classFormRef"
+                label-width="100px"
+            >
                 <el-form-item label="分类名称" prop="className">
-                    <el-input type="text" v-model="classForm.className"
-                              autocomplete="off"></el-input>
+                    <el-input
+                        type="text"
+                        v-model="classForm.className"
+                        autocomplete="off"
+                    ></el-input>
                 </el-form-item>
                 <el-form-item label="分类编号" prop="classCode">
-                    <el-input type="text" v-model="classForm.classCode"
-                              autocomplete="off"></el-input>
+                    <el-input
+                        type="text"
+                        v-model="classForm.classCode"
+                        autocomplete="off"
+                    ></el-input>
                 </el-form-item>
                 <el-form-item label="分类类型">
-                    <el-select v-model="classForm.classType" placeholder="请选择">
+                    <el-select
+                        v-model="classForm.classType"
+                        placeholder="请选择"
+                    >
                         <el-option
                             v-for="item in classTypeOptions"
                             :key="item.value"
                             :label="item.label"
-                            :value="item.value">
+                            :value="item.value"
+                        >
                         </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="分类描述">
-                    <el-input type="text" v-model="classForm.classDesc"
-                              autocomplete="off"></el-input>
+                    <el-input
+                        type="text"
+                        v-model="classForm.classDesc"
+                        autocomplete="off"
+                    ></el-input>
                 </el-form-item>
             </el-form>
             <template #footer>
                 <div class="dialog-footer">
-                    <el-button @click="classDialog.dialogVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="saveClass('classFormRef')"
-                               :loading="classDialog.saveFlag">{{ classDialog.saveFlag ? '保存中...' : '保 存' }}</el-button>
+                    <el-button @click="classDialog.dialogVisible = false"
+                        >取 消</el-button
+                    >
+                    <el-button
+                        type="primary"
+                        @click="saveClass()"
+                        :loading="classDialog.saveFlag"
+                        >{{
+                            classDialog.saveFlag ? "保存中..." : "保 存"
+                        }}</el-button
+                    >
                 </div>
             </template>
         </el-dialog>
@@ -125,11 +160,11 @@
 </template>
 
 <script lang="ts">
-import { Vue, Options } from "vue-property-decorator";
+import { Vue, Options, Ref } from "vue-property-decorator";
 import { ClassApi } from "@/api";
 import { ClassInfo } from "@/api/class/types";
-import { ElFormItemContext } from "element-plus";
-import {CirclePlus} from "@element-plus/icons"
+import { ElForm } from "element-plus";
+import { CirclePlus, Delete, Edit } from "@element-plus/icons";
 
 interface Pagination {
     page: number;
@@ -147,10 +182,14 @@ interface DialogModel {
 
 @Options({
     components: {
-        CirclePlus
-    }
+        CirclePlus,
+        Delete,
+        Edit,
+    },
 })
 export default class ClassAdmin extends Vue {
+    @Ref() readonly classFormRef!: typeof ElForm;
+
     public classTableList: Array<any> = [];
 
     public classTableLoading: boolean = false;
@@ -245,11 +284,7 @@ export default class ClassAdmin extends Vue {
             if (classId) {
                 ClassApi.getClassInfo(classId)
                     .then((res) => {
-                        this.classForm.classId = res.data.classId;
-                        this.classForm.classCode = res.data.classCode;
-                        this.classForm.className = res.data.className;
-                        this.classForm.classType = res.data.classType;
-                        this.classForm.classDesc = res.data.classDesc;
+                        this.classForm = Object.assign({}, res.data);
                     })
                     .catch(() => {
                         this.$msg.error("获取失败");
@@ -263,22 +298,19 @@ export default class ClassAdmin extends Vue {
         this.classDialog.dialogVisible = true;
     }
 
-    public closeClassDiaLog(formName: string): void {
+    public closeClassDiaLog(): void {
         this.classForm.classId = "";
         this.classForm.classType = 0;
         this.classForm.classDesc = "";
-        (
-            this.$refs[formName] as ElFormItemContext & { resetFields: any }
-        ).resetFields();
+        this.classFormRef.resetFields();
     }
 
-    public saveClass(formName: string) {
+    public saveClass() {
         this.classDialog.saveFlag = true;
         this.classDialog.loading = true;
-        (
-            this.$refs[formName] as ElFormItemContext & { validate: any }
-        ).validate((valid: boolean | undefined) => {
-            if (valid) {
+        this.classFormRef
+            .validate()
+            .then(() => {
                 let data: ClassInfo = {
                     classCode: this.classForm.classCode,
                     className: this.classForm.className,
@@ -315,12 +347,11 @@ export default class ClassAdmin extends Vue {
                             this.classDialog.loading = false;
                         });
                 }
-            } else {
+            })
+            .catch(() => {
                 this.classDialog.saveFlag = false;
                 this.classDialog.loading = false;
-                return false;
-            }
-        });
+            });
     }
 
     public removeClass(classId: string): void {
@@ -330,12 +361,14 @@ export default class ClassAdmin extends Vue {
             type: "warning",
         })
             .then(() => {
-                ClassApi.deleteClass(classId).then(() => {
-                    this.$msg.success("删除成功");
-                    this.getClassData(1);
-                }).catch(() => {
-                    this.$msg.error("删除失败");
-                });
+                ClassApi.deleteClass(classId)
+                    .then(() => {
+                        this.$msg.success("删除成功");
+                        this.getClassData(1);
+                    })
+                    .catch(() => {
+                        this.$msg.error("删除失败");
+                    });
             })
             .catch(() => {
                 return false;

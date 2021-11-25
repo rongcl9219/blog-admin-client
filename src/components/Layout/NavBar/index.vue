@@ -48,7 +48,7 @@
         :close-on-click-modal="false"
     >
         <el-form
-            ref="updatePasswordForm"
+            ref="updatePasswordFormRef"
             :model="updatePasswordDialog.updatePasswordForm"
             status-icon
             :rules="updatePasswordDialog.rules"
@@ -88,7 +88,7 @@
 
     <el-dialog
         title="个人信息"
-        @close="closeUserInfoDialog('updateUserInfoForm')"
+        @close="closeUserInfoDialog()"
         v-model="userInfoDialog.visible"
         :close-on-press-escape="false"
         :append-to-body="true"
@@ -150,7 +150,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Options } from "vue-class-component";
+import { Vue, Options, Ref } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import defaultUserImg from "@/assets/images/default_img/default_user.png";
 import Breadcrumb from "@/components/Layout/Breadcrumb/index.vue";
@@ -158,7 +158,7 @@ import Hamburger from "@/components/Layout/Hamburger/index.vue";
 import ThemePicker from "@/components/ThemePicker/index.vue";
 import UploadAvatar from "@/components/UploadAvatar/index.vue";
 import { CaretBottom } from "@element-plus/icons";
-import { ElFormItemContext } from "element-plus";
+import { ElForm } from "element-plus";
 import { UserApi } from "@/api";
 
 @Options({
@@ -192,6 +192,7 @@ export default class NavBar extends Vue {
     /* endregion */
 
     /* region 修改密码 */
+    @Ref() readonly updatePasswordFormRef!: typeof ElForm;
     public updatePasswordDialog = {
         visible: false,
         updatePasswordForm: {
@@ -247,29 +248,18 @@ export default class NavBar extends Vue {
                 self.updatePasswordDialog.updatePasswordForm.checkPass = "";
                 callback(new Error("两次密码输入不一致"));
             } else {
-                (
-                    self.$refs["updatePasswordForm"] as ElFormItemContext & {
-                        validateField: any;
-                    }
-                ).validateField("newPass");
+                self.updatePasswordFormRef.validateField("newPass");
                 callback();
             }
         };
     }
     public closeUpdatePasswordDialog() {
-        (
-            this.$refs["updatePasswordForm"] as ElFormItemContext & {
-                resetFields: any;
-            }
-        ).resetFields();
+        this.updatePasswordFormRef.resetFields();
     }
     public updatePass() {
-        (
-            this.$refs["updatePasswordForm"] as ElFormItemContext & {
-                validate: any;
-            }
-        ).validate((valid: boolean | undefined) => {
-            if (valid) {
+        this.updatePasswordFormRef
+            .validate()
+            .then(() => {
                 let data = {
                     oldPass:
                         this.updatePasswordDialog.updatePasswordForm.oldPass,
@@ -286,14 +276,15 @@ export default class NavBar extends Vue {
                     .catch(() => {
                         this.$msg.error("修改失败");
                     });
-            } else {
+            })
+            .catch(() => {
                 return false;
-            }
-        });
+            });
     }
     /* endregion */
 
     /* region 个人信息 */
+    @Ref() readonly updateUserInfoForm!: typeof ElForm;
     @Action("user/setUserAvatar") setUserAvatar: any;
     public userInfoDialog = {
         visible: false,
@@ -316,12 +307,8 @@ export default class NavBar extends Vue {
                 this.$msg.error(err.msg || err.message);
             });
     }
-    closeUserInfoDialog(formName: string) {
-        (
-            this.$refs[formName] as ElFormItemContext & {
-                resetFields: any;
-            }
-        ).resetFields();
+    closeUserInfoDialog() {
+        this.updateUserInfoForm.resetFields();
     }
     handleUpdateUserInfo() {
         const updateLoading = this.$loading({

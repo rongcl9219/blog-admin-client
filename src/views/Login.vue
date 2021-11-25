@@ -3,7 +3,7 @@
         <div class="login-card">
             <h3 class="title">后台登录</h3>
             <el-form
-                ref="loginForm"
+                ref="loginFormRef"
                 class="login-form"
                 :model="loginFormModel"
                 :rules="loginFormRules"
@@ -63,7 +63,7 @@
                     :loading="loading"
                     type="primary"
                     style="width: 100%; margin-bottom: 30px"
-                    @click="handleLogin('loginForm', $event)"
+                    @click="handleLogin($event)"
                 >
                     登录
                 </el-button>
@@ -80,9 +80,9 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from "vue-class-component";
+import { Options, Vue, Ref } from "vue-property-decorator";
 import { Action } from "vuex-class";
-import { ElFormItemContext } from "element-plus";
+import { ElForm } from "element-plus";
 import ValidCode from "@/components/ValidCode/index.vue";
 import { UserApi } from "@/api";
 
@@ -92,6 +92,8 @@ import { UserApi } from "@/api";
     },
 })
 export default class Login extends Vue {
+    @Ref() readonly loginFormRef!: typeof ElForm;
+
     @Action("user/login") login: any;
     @Action("user/loginOut") loginOut: any;
 
@@ -137,7 +139,7 @@ export default class Login extends Vue {
         };
     }
 
-    public handleLogin(formName: string, event?: any) {
+    public handleLogin(event?: any) {
         if (event) {
             // 去除按钮聚焦，否则先点击按钮在按回车会重复触发事件
             let target = event.target;
@@ -153,10 +155,9 @@ export default class Login extends Vue {
         this.loginLock = true;
         this.loading = true;
 
-        (
-            this.$refs[formName] as ElFormItemContext & { validate: any }
-        ).validate((valid: boolean | undefined) => {
-            if (valid) {
+        this.loginFormRef
+            .validate()
+            .then(() => {
                 let data = {
                     username: this.loginFormModel.username,
                     password: this.loginFormModel.password,
@@ -172,19 +173,18 @@ export default class Login extends Vue {
                         this.loading = false;
                         this.loginLock = false;
                     });
-            } else {
+            })
+            .catch(() => {
                 this.loading = false;
                 this.loginLock = false;
-                return false;
-            }
-        });
+            });
     }
 
     public handleKeyup(e: KeyboardEvent) {
         // 将target装换为对应的HTML元素
         const target = e.target as HTMLBodyElement;
         if (e.keyCode === 13 && target.baseURI.match(/login/)) {
-            this.handleLogin("loginForm"); // 调用登录 验证方法
+            this.handleLogin(); // 调用登录 验证方法
         }
     }
 
