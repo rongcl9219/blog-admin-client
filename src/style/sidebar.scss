@@ -7,7 +7,6 @@
     }
 
     .sidebar-container {
-        transition: width 0.28s;
         width: 210px !important;
         height: 100%;
         position: fixed;
@@ -36,32 +35,19 @@
             height: 100%;
         }
 
-        &.has-logo {
-            .el-scrollbar {
-                height: calc(100% - 50px);
-            }
-        }
-
         .is-horizontal {
             display: none;
-        }
-
-        a {
-            display: inline-block;
-            width: 100%;
-            overflow: hidden;
-        }
-
-        .svg-icon {
-            font-size: 18px;
-            margin-right: 12px;
-            margin-left: -2px;
         }
 
         .el-menu {
             border: none;
             height: 100%;
             width: 100% !important;
+        }
+
+        .svg-icon {
+            font-size: 16px;
+            margin-right: 5px;
         }
 
         & .nest-menu .el-submenu > .el-submenu__title,
@@ -92,13 +78,6 @@
 
 // when menu collapsed
 .el-menu--vertical {
-    & > .el-menu {
-        .svg-icon {
-            margin-right: 12px;
-            margin-left: -2px;
-        }
-    }
-
     // the scroll bar appears when the subMenu is too long
     > .el-menu--popup {
         max-height: 100vh;
