@@ -5,7 +5,7 @@
             <el-form
                 ref="loginFormRef"
                 class="login-form"
-                :model="loginFormModel"
+                :model="loginForm"
                 :rules="loginFormRules"
                 label-position="left"
             >
@@ -14,7 +14,7 @@
                         <svg-icon icon-class="user" />
                     </span>
                     <el-input
-                        v-model="loginFormModel.username"
+                        v-model="loginForm.username"
                         placeholder="用户名"
                         type="text"
                     />
@@ -24,8 +24,7 @@
                         <svg-icon icon-class="password" />
                     </span>
                     <el-input
-                        :key="passwordType"
-                        v-model="loginFormModel.password"
+                        v-model="loginForm.password"
                         :type="passwordType ? 'password' : 'text'"
                         placeholder="密码"
                     />
@@ -33,13 +32,8 @@
                         class="show-pwd"
                         @click="passwordType = !passwordType"
                     >
-                        <i
-                            :class="
-                                passwordType
-                                    ? 'el-icon-third-yanjing_bi'
-                                    : 'el-icon-third-yanjing'
-                            "
-                        ></i>
+                        <svg-icon icon-class="eyes-close" v-if="passwordType"/>
+                        <svg-icon icon-class="eyes" v-else/>
                     </span>
                 </el-form-item>
                 <el-form-item prop="validCode">
@@ -48,7 +42,7 @@
                             <svg-icon icon-class="verification-code" />
                         </span>
                         <el-input
-                            v-model="loginFormModel.validCode"
+                            v-model="loginForm.validCode"
                             type="text"
                             autocomplete="off"
                             placeholder="验证码，不区分大小写"
@@ -79,147 +73,13 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Options, Vue, Ref } from "vue-property-decorator";
-import { Action } from "vuex-class";
-import { ElForm } from "element-plus";
-import ValidCode from "@/components/ValidCode/index.vue";
-import { UserApi } from "@/api";
-
-@Options({
-    components: {
-        ValidCode,
-    },
-})
-export default class Login extends Vue {
-    @Ref() readonly loginFormRef!: typeof ElForm;
-
-    @Action("user/login") login: any;
-    @Action("user/loginOut") loginOut: any;
-
-    public loginFormModel = {
-        username: "",
-        password: "",
-        validCode: "",
-    };
-    public loginFormRules = {
-        username: [
-            { required: true, message: "请输入用户名", trigger: "blur" },
-        ],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
-        validCode: [
-            {
-                validator: this.checkValidCode(this),
-                required: true,
-                trigger: "blur",
-            },
-        ],
-    };
-    public validCodeModel = {
-        validCode: "",
-        codeRefresh: 0,
-    };
-    public loading: boolean = false;
-    private passwordType: boolean = true;
-    private loginLock: boolean = false;
-
-    public checkValidCode(self: Login) {
-        return (rule: any, value: any, callback: any) => {
-            if (!value || value.trim() === "") {
-                callback(new Error("请输入验证码"));
-            } else if (
-                value.toLocaleUpperCase() !==
-                self.validCodeModel.validCode.toLocaleUpperCase()
-            ) {
-                ++self.validCodeModel.codeRefresh;
-                callback(new Error("验证码错误"));
-            } else {
-                callback();
-            }
-        };
-    }
-
-    public handleLogin(event?: any) {
-        if (event) {
-            // 去除按钮聚焦，否则先点击按钮在按回车会重复触发事件
-            let target = event.target;
-            if (target.nodeName === "SPAN" || target.nodeName === "I") {
-                target = event.target.parentNode;
-            }
-            target.blur();
-        }
-
-        if (this.loginLock) {
-            return false;
-        }
-        this.loginLock = true;
-        this.loading = true;
-
-        this.loginFormRef
-            .validate()
-            .then(() => {
-                let data = {
-                    username: this.loginFormModel.username,
-                    password: this.loginFormModel.password,
-                };
-
-                this.login(data)
-                    .then(() => {
-                        this.$router.push("/");
-                    })
-                    .catch((error: any) => {
-                        this.$msg.error(error.msg);
-                        this.validCodeModel.codeRefresh++;
-                        this.loading = false;
-                        this.loginLock = false;
-                    });
-            })
-            .catch(() => {
-                this.loading = false;
-                this.loginLock = false;
-            });
-    }
-
-    public handleKeyup(e: KeyboardEvent) {
-        // 将target装换为对应的HTML元素
-        const target = e.target as HTMLBodyElement;
-        if (e.keyCode === 13 && target.baseURI.match(/login/)) {
-            this.handleLogin(); // 调用登录 验证方法
-        }
-    }
-
-    public initAdmin() {
-        UserApi.initSysAdmin()
-            .then((res) => {
-                this.$msg.success(
-                    `初始化成功！用户名为：${res.data.username}，密码为：${res.data.password}`
-                );
-            })
-            .catch((error) => {
-                this.$msg.error(error.msg || "初始化失败");
-            });
-    }
-
-    created() {
-        this.loginOut()
-            .then()
-            .catch((error: any) => {
-                console.error(error);
-            });
-
-        document.addEventListener("keyup", this.handleKeyup);
-    }
-
-    unmounted() {
-        document.removeEventListener("keyup", this.handleKeyup);
-    }
-}
-</script>
+<script src="./ts/index.ts"></script>
 
 <style lang="scss">
 $bg: #283443;
 $light_gray: #222;
 $cursor: #222;
+$input_bg: #bcd4e1;
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
     .login-container .el-input input {
         color: $cursor;
@@ -240,7 +100,7 @@ $cursor: #222;
             height: 47px;
             caret-color: $cursor;
             &:-webkit-autofill {
-                box-shadow: 0 0 0 1000px #bcd4e1 inset !important;
+                box-shadow: 0 0 0 1000px $input_bg inset !important;
                 -webkit-text-fill-color: $bg !important;
             }
             &::-webkit-input-placeholder {
@@ -256,7 +116,7 @@ $cursor: #222;
     }
     .el-form-item {
         border: 1px solid rgba(255, 255, 255, 0.1);
-        background: rgba(0, 0, 0, 0.1);
+        background: $input_bg;
         border-radius: 5px;
         color: #454545;
     }

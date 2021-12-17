@@ -20,12 +20,4 @@ const Message: any = (options: any) => {
     };
 });
 
-declare module '@vue/runtime-core' {
-    export interface ComponentCustomProperties {
-        $msg: typeof Message;
-        $loading: any;
-        $confirm: any;
-    }
-}
-
 export default Message;
