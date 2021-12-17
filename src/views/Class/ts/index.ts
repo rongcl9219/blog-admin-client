@@ -57,7 +57,7 @@ export default class ClassAdmin extends Vue {
         ],
     };
 
-    public checkClassCode(rule: any, value: string, callback: any) {
+    public checkClassCode(rule: any, value: string, callback: (message?: Error | string) => void) {
         if (!value.trim()) {
             callback(new Error("请输入分类编号"));
         } else {
