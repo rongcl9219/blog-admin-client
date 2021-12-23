@@ -1,82 +1,196 @@
 <template>
-    <div>
-        <el-row>
-            <el-button>Default</el-button>
-            <el-button type="primary">Primary</el-button>
-            <el-button type="success">Success</el-button>
-            <el-button type="info">Info</el-button>
-            <el-button type="warning">Warning</el-button>
-            <el-button type="danger">Danger</el-button>
-            <el-button>中文</el-button>
-        </el-row>
-        <div>
-            <el-link href="https://element.eleme.io" target="_blank"
-            >default</el-link
-            >
-            <el-link type="primary">primary</el-link>
-            <el-link type="success">success</el-link>
-            <el-link type="warning">warning</el-link>
-            <el-link type="danger">danger</el-link>
-            <el-link type="info">info</el-link>
-        </div>
-        <div>
-            <el-checkbox v-model="checked1" label="Option 1"></el-checkbox>
-            <el-checkbox v-model="checked2" label="Option 2"></el-checkbox>
-        </div>
-        <div>
-            <el-pagination background layout="prev, pager, next" :total="1000" />
-        </div>
-        <div><el-input v-model="input"></el-input></div>
-        <div>
-            <el-form
-                ref="form"
-                :model="ruleForm"
-                label-width="120px"
-                class="demo-ruleForm">
-                <el-form-item label="Activity name">
-                    <el-input v-model="ruleForm.name"></el-input>
-                </el-form-item>
-            </el-form>
-        </div>
-        <div style="margin: 10px 0;">
-            <svg-icon icon-class="user" @click="testClick" />
-        </div>
+    <div class="home-page">
+        <el-card class="box-card">
+            <template #header>
+                <div class="card-header">
+                    <p style="color: rgb(107, 132, 148)">
+                        <span class="header-title" style="margin-right: 20px"
+                            >欢迎光临</span
+                        >【火星的青青草原-管理后台】
+                    </p>
+                </div>
+            </template>
+            <el-card class="box-card" style="margin-bottom: 20px">
+                <template #header>
+                    <div class="clearfix">
+                        <span class="header-title">关于开源项目【火星的青青草原】</span>
+                    </div>
+                </template>
+                <div>
+                    <h3 class="header-title">项目相关</h3>
+                    <ul>
+                        <li
+                            class="list-item about"
+                            v-for="(item, index) in githubArr"
+                            :key="index"
+                        >
+                            <el-link
+                                :underline="false"
+                                type="primary"
+                                target="_blank"
+                                :href="item.link"
+                            >
+                                <span class="list-item-title"
+                                    ><svg-icon icon-class="circle" />{{
+                                        item.name
+                                    }}：<span>{{ item.link }}</span></span
+                                >
+
+                            </el-link>
+                        </li>
+                    </ul>
+                </div>
+            </el-card>
+            <el-row :gutter="20">
+                <el-col :span="12">
+                    <el-card class="box-card">
+                        <template #header>
+                            <div class="clearfix">
+                                <span class="header-title">最近发布</span>
+                            </div>
+                        </template>
+                        <div>
+                            <ul>
+                                <li
+                                    class="list-article"
+                                    v-for="article in currentArticles"
+                                    :key="article.articleId"
+                                >
+                                    <el-link
+                                        :underline="false"
+                                        target="_blank"
+                                        :href="
+                                            '/article?articleId=' +
+                                            article.articleId
+                                        "
+                                    >
+                                        <span class="list-time">{{
+                                            formatDate(article.createDate)
+                                        }}</span>
+                                        <span class="article-title">{{
+                                            article.articleTitle
+                                        }}</span>
+                                    </el-link>
+                                </li>
+                            </ul>
+                        </div>
+                    </el-card>
+                </el-col>
+                <el-col :span="12">
+                    <el-card class="box-card">
+                        <template #header>
+                            <div class="clearfix">
+                                <span class="header-title">近期评论</span>
+                            </div>
+                        </template>
+                        <div>
+                            <h3 class="header-title">项目相关</h3>
+                            <ul>
+                                <li>开源项目地址</li>
+                                <li>博主网站首页</li>
+                            </ul>
+                        </div>
+                    </el-card>
+                </el-col>
+            </el-row>
+        </el-card>
     </div>
 </template>
 
 <script lang="ts">
 import { Vue, Options } from "vue-class-component";
+import { ArticleApi } from "@/api";
+import { formatDate } from "@/utils/tool";
 
 @Options({})
-export default class Main extends Vue {
-    checked1 = 1;
-    checked2 = 2;
+export default class AdminMain extends Vue {
+    public githubArr: Array<any> = [
+        { name: "博主网站首页", link: "http://rongcl.cn" },
+        { name: "开源项目地址", link: "https://github.com/rongcl9219" },
+        {
+            name: "前台项目地址",
+            link: "https://github.com/rongcl9219/my-blog-client",
+        },
+        {
+            name: "后台项目地址",
+            link: "https://github.com/rongcl9219/my-blog-server",
+        },
+    ];
 
-    input = "";
+    public currentArticles: Array<any> = [];
 
-    ruleForm = {
-        name: ""
+    public formatDate(date: any) {
+        return formatDate("yyyy-MM-dd hh:mm", date);
     }
 
-    rules = {
-        name: [
-            {
-                required: true,
-                message: 'Please input Activity name',
-                trigger: 'blur',
-            },
-            {
-                min: 3,
-                max: 5,
-                message: 'Length should be 3 to 5',
-                trigger: 'blur',
-            },
-        ],
-    }
-    testClick() {
-        console.log(1);
+    created() {
+        ArticleApi.getCurrentArticles()
+            .then((res) => {
+                this.currentArticles = res.data;
+            })
+            .catch(() => {
+                return false;
+            });
     }
 }
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.home-page {
+    .header-title {
+        color: #42657b;
+        font-size: 20px;
+    }
+
+    .about {
+        padding-left: 20px;
+    }
+
+    .list-item {
+        display: flex;
+        align-items: center;
+        line-height: 28px;
+
+        .list-item-title {
+            display: flex;
+            align-items: center;
+            color: #42657b;
+            cursor: pointer;
+            transition: 0.3s;
+
+            &:hover {
+                color: var(--el-color-primary);
+            }
+
+            span {
+                color: var(--el-color-primary);
+            }
+        }
+
+        .svg-icon {
+            margin-right: 10px;
+            font-size: 12px;
+            transform: scale(0.7);
+        }
+    }
+
+    .list-article {
+        height: 28px;
+
+        a:hover {
+            color: var(--el-color-primary);
+            transition: 0.3s;
+        }
+
+        .list-time {
+            font-size: 15px;
+        }
+
+        .article-title {
+            font-size: 15px;
+            padding-left: 10px;
+            color: var(--el-color-primary);
+        }
+    }
+}
+</style>

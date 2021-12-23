@@ -1,1 +1,60 @@
+/**
+ * 处理日期
+ * @param fmt
+ * @param date
+ * @param type
+ * @returns {string|*}
+ */
+export const formatDate = (fmt: string, date: any, type = 1) => {
+    const dateObj = new Date(date);
 
+    if (type === 1) {
+        const o: any = {
+            "M+": dateObj.getMonth() + 1,
+            "d+": dateObj.getDate(),
+            "h+": dateObj.getHours(),
+            "m+": dateObj.getMinutes(),
+            "s+": dateObj.getSeconds(),
+            "q+": Math.floor((dateObj.getMonth() + 3) / 3),
+            S: dateObj.getMilliseconds(),
+        };
+        if (/(y+)/.test(fmt)) {
+            fmt = fmt.replace(
+                RegExp.$1,
+                (dateObj.getFullYear() + "").substr(4 - RegExp.$1.length)
+            );
+        }
+        for (const k in o) {
+            if (new RegExp("(" + k + ")").test(fmt)) {
+                fmt = fmt.replace(
+                    RegExp.$1,
+                    RegExp.$1.length === 1
+                        ? o[k]
+                        : ("00" + o[k]).substr(("" + o[k]).length)
+                );
+            }
+        }
+        return fmt;
+    } else {
+        const year = dateObj.getFullYear();
+        const month = (dateObj.getMonth() + 1).toString().padStart(2, "0");
+        const day = dateObj.getDate().toString().padStart(2, "0");
+        const hours = dateObj.getHours().toString().padStart(2, "0");
+        const minute = dateObj.getMinutes().toString().padStart(2, "0");
+        const second = dateObj.getSeconds().toString().padStart(2, "0");
+
+        return (
+            year +
+            "年" +
+            month +
+            "月" +
+            day +
+            "日 " +
+            hours +
+            ":" +
+            minute +
+            ":" +
+            second
+        );
+    }
+};
