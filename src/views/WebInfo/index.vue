@@ -52,6 +52,8 @@
 
         <UploadImage v-model:imgList="form.webBanner"
                      v-model:uploadImgVisible="upLoadImgVisible"
+                     :imgWidth="100"
+                     :imgHeight="100"
                      :limitNum="1"></UploadImage>
     </div>
 </template>
@@ -79,6 +81,7 @@
     align-items: center;
     width: 60px;
     height: 60px;
+    line-height: 14px;
     background-color: #fff;
     border: 1px dashed #d9d9d9;
     color: #000;

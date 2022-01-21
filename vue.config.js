@@ -88,12 +88,10 @@ module.exports = {
         host: "localhost",
         port: "5000", // 端口
         https: false,
-        hotOnly: false, // 热更新
+        hotOnly: true, // 热更新
         proxy: {
             "/api": {
                 target: "http://localhost:90/", // 目标代理接口地址
-                ws: false, // 如果代理websockets，需要配置这个参数
-                secure: false, // https接口，需要配置这个参数
                 changeOrigin: true, // 开启代理，在本地创建一个虚拟服务端
                 pathRewrite: {
                     // 路径重写

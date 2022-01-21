@@ -45,4 +45,8 @@ export default class WebInfo extends Vue {
     get webBannerUrl() {
         return this.form.webBanner.length > 0 ? '' : '';
     }
+
+    onSubmit() {
+        console.log(1);
+    }
 }
