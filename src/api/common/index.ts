@@ -10,7 +10,7 @@ class CommonApi extends Abstract {
      */
     getValidCode() {
         return this.fetchGet({
-            url: "/validCode",
+            url: "/validCode"
         });
     }
 
@@ -21,7 +21,7 @@ class CommonApi extends Abstract {
     getUploadToken(data: UploadToken) {
         return this.fetchPost({
             url: "/getUploadToken",
-            data,
+            data
         });
     }
 
@@ -40,7 +40,7 @@ class CommonApi extends Abstract {
         return this.fetchPost({
             baseURL: "",
             url: "http://upload-z2.qiniup.com",
-            data: formData,
+            data: formData
         });
     }
 
@@ -58,7 +58,7 @@ class CommonApi extends Abstract {
     addComment(data: any) {
         return this.fetchPost({
             url: "/addComment",
-            data,
+            data
         });
     }
 
@@ -69,7 +69,7 @@ class CommonApi extends Abstract {
     getComment(articleId: string) {
         return this.fetchGet({
             url: "/getComment",
-            params: { articleId },
+            params: { articleId }
         });
     }
 

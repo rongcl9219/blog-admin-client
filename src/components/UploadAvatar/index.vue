@@ -98,7 +98,8 @@
                                     size="small"
                                     type="primary"
                                     @click.prevent="handleClick"
-                                    >上传</el-button
+                                >上传
+                                </el-button
                                 >
                                 <el-button
                                     style="margin-left: 5px"
@@ -158,8 +159,8 @@ interface SourceImgMouseDown {
 
 @Options({
     components: {
-        Close,
-    },
+        Close
+    }
 })
 export default class UploadAvatar extends Vue {
     @Prop({ default: false }) uploadAvatarVisible: boolean;
@@ -174,10 +175,12 @@ export default class UploadAvatar extends Vue {
     onCropUploadSuccess(fileObj: any) {
         return fileObj;
     }
+
     @Emit("crop-upload-fail")
     onCropUploadFail(error: any) {
         return error;
     }
+
     @Emit("update:uploadAvatarVisible")
     onUploadAvatarVisibleChanged(visible: boolean) {
         return visible;
@@ -193,7 +196,7 @@ export default class UploadAvatar extends Vue {
     public sourceImgContainer = {
         // sic
         width: 300,
-        height: 240, // 如果生成图比例与此一致会出现bug，先改成特殊的格式吧，哈哈哈
+        height: 240 // 如果生成图比例与此一致会出现bug，先改成特殊的格式吧，哈哈哈
     };
     public scale: Scale = {
         zoomAddOn: false,
@@ -210,7 +213,7 @@ export default class UploadAvatar extends Vue {
         minWidth: 0,
         minHeight: 0,
         naturalWidth: 0,
-        naturalHeight: 0,
+        naturalHeight: 0
     };
     // 原图片拖动事件初始值
     public sourceImgMouseDown: SourceImgMouseDown = {
@@ -218,7 +221,7 @@ export default class UploadAvatar extends Vue {
         mX: 0, // 鼠标按下的坐标
         mY: 0,
         x: 0, // scale原图坐标
-        y: 0,
+        y: 0
     };
     // 原图地址、生成图片地址
     public sourceImg: any = null;
@@ -234,9 +237,10 @@ export default class UploadAvatar extends Vue {
             top,
             left,
             width: scale.width + "px",
-            height: scale.height + "px",
+            height: scale.height + "px"
         };
     }
+
     // 原图蒙版属性
     get sourceImgMasking() {
         const { width, height, ratio, sourceImgContainer } = this;
@@ -262,9 +266,10 @@ export default class UploadAvatar extends Vue {
             x,
             y,
             width: w,
-            height: h,
+            height: h
         };
     }
+
     // 原图遮罩样式
     get sourceImgShadeStyle() {
         const { sourceImgMasking, sourceImgContainer } = this;
@@ -278,12 +283,14 @@ export default class UploadAvatar extends Vue {
                 : (sic.height - sim.height) / 2;
         return {
             width: w + "px",
-            height: h + "px",
+            height: h + "px"
         };
     }
+
     get rangeShow() {
         return !!this.sourceImgUrl;
     }
+
     // 需求图宽高比
     get ratio() {
         const { width, height } = this;
@@ -293,9 +300,11 @@ export default class UploadAvatar extends Vue {
     handleClick() {
         this.fileInput.click();
     }
+
     isAssetTypeAnImage(ext: string) {
         return ["png", "jpg", "jpeg", "gif"].indexOf(ext.toLowerCase()) !== -1;
     }
+
     data2blob(data: any) {
         data = data.split(",")[1];
         data = window.atob(data);
@@ -304,26 +313,28 @@ export default class UploadAvatar extends Vue {
             ia[i] = data.charCodeAt(i);
         }
         return new Blob([ia], {
-            type: "image/png",
+            type: "image/png"
         });
     }
+
     // 将文件转换成base64格式
     getBase64(file: any) {
-        return new Promise(function (resolve, reject) {
+        return new Promise(function(resolve, reject) {
             let reader = new FileReader();
             let imgResult: any;
             reader.readAsDataURL(file);
-            reader.onload = function () {
+            reader.onload = function() {
                 imgResult = reader.result;
             };
-            reader.onerror = function (error) {
+            reader.onerror = function(error) {
                 reject(error);
             };
-            reader.onloadend = function () {
+            reader.onloadend = function() {
                 resolve(imgResult);
             };
         });
     }
+
     fileChange(e: InputEvent) {
         e.preventDefault();
         const target = e.target as HTMLInputElement;
@@ -355,12 +366,13 @@ export default class UploadAvatar extends Vue {
             });
         });
     }
+
     submitUpload() {
         const uploadLoading = this.$loading({
             lock: true,
             text: "上传中...",
             spinner: "el-icon-loading",
-            background: "rgba(0, 0, 0, 0.7)",
+            background: "rgba(0, 0, 0, 0.7)"
         });
 
         if (!this.createImgUrl) {
@@ -385,7 +397,7 @@ export default class UploadAvatar extends Vue {
                     .then(() => {
                         let fileObj = {
                             key: key,
-                            url: data.url,
+                            url: data.url
                         };
                         this.onCropUploadSuccess(fileObj);
                     })
@@ -403,10 +415,12 @@ export default class UploadAvatar extends Vue {
                 uploadLoading.close();
             });
     }
+
     closeUpLoadImg() {
         this.onUploadAvatarVisibleChanged(false);
         this.reset();
     }
+
     reset() {
         this.scale = {
             zoomAddOn: false, // 按钮缩放事件开启
@@ -423,7 +437,7 @@ export default class UploadAvatar extends Vue {
             minWidth: 0, // 最宽
             minHeight: 0,
             naturalWidth: 0, // 原宽
-            naturalHeight: 0,
+            naturalHeight: 0
         };
         // 原图片拖动事件初始值
         this.scale.sourceImgMouseDown = {
@@ -431,18 +445,20 @@ export default class UploadAvatar extends Vue {
             mX: 0, // 鼠标按下的坐标
             mY: 0,
             x: 0, // scale原图坐标
-            y: 0,
+            y: 0
         };
         this.sourceImg = null;
         this.sourceImgUrl = "";
         this.createImgUrl = "";
         this.fileList = [];
     }
+
     /* 图片选择区域函数绑定 */
     preventDefault(e: Event) {
         e.preventDefault();
         return false;
     }
+
     // 剪裁前准备工作
     startCrop() {
         const { width, height, ratio, scale, sourceImgUrl, sourceImgMasking } =
@@ -460,6 +476,7 @@ export default class UploadAvatar extends Vue {
             let y = 0;
             // 图片像素不达标
             if (nWidth < width || nHeight < height) {
+                this.$msg.warning("图片像素不达标");
                 return false;
             }
             if (ratio > nRatio) {
@@ -485,6 +502,7 @@ export default class UploadAvatar extends Vue {
             this.createImg();
         };
     }
+
     // 鼠标按下图片准备移动
     imgStartMove(e: MouseEvent) {
         e.preventDefault();
@@ -496,13 +514,14 @@ export default class UploadAvatar extends Vue {
         simd.y = scale.y;
         simd.on = true;
     }
+
     // 鼠标按下状态下移动，图片移动
     imgMove(e: MouseEvent) {
         e.preventDefault();
         const {
             sourceImgMouseDown: { on, mX, mY, x, y },
             scale,
-            sourceImgMasking,
+            sourceImgMasking
         } = this;
         const sim = sourceImgMasking;
         const nX = e.screenX;
@@ -527,6 +546,7 @@ export default class UploadAvatar extends Vue {
         scale.x = rX;
         scale.y = rY;
     }
+
     // 按钮按下开始放大
     startZoomAdd() {
         const { scale } = this;
@@ -535,17 +555,19 @@ export default class UploadAvatar extends Vue {
             if (scale.zoomAddOn) {
                 const range = scale.range >= 100 ? 100 : ++scale.range;
                 this.zoomImg(range);
-                setTimeout(function () {
+                setTimeout(function() {
                     zoom();
                 }, 60);
             }
         };
         zoom();
     }
+
     // 按钮松开或移开取消放大
     endZoomAdd() {
         this.scale.zoomAddOn = false;
     }
+
     // 按钮按下开始缩小
     startZoomSub() {
         const { scale } = this;
@@ -554,21 +576,24 @@ export default class UploadAvatar extends Vue {
             if (scale.zoomSubOn) {
                 const range = scale.range <= 0 ? 0 : --scale.range;
                 this.zoomImg(range);
-                setTimeout(function () {
+                setTimeout(function() {
                     zoom();
                 }, 60);
             }
         };
         zoom();
     }
+
     // 按钮松开或移开取消缩小
     endZoomSub() {
         const { scale } = this;
         scale.zoomSubOn = false;
     }
+
     zoomChange(e: any) {
         this.zoomImg(e.target.value);
     }
+
     // 缩放原图
     zoomImg(newRange: number) {
         const { sourceImgMasking, scale } = this;
@@ -580,7 +605,7 @@ export default class UploadAvatar extends Vue {
             width,
             height,
             x,
-            y,
+            y
         } = scale;
         const sim = sourceImgMasking;
         // 蒙版宽高
@@ -617,12 +642,13 @@ export default class UploadAvatar extends Vue {
             }
         }, 300);
     }
+
     // 生成需求图片
     createImg(e?: Event | number) {
         const {
             sourceImg,
             scale: { x, y, width, height },
-            sourceImgMasking: { scale },
+            sourceImgMasking: { scale }
         } = this;
         const canvas = this.canvas;
         const ctx: any = canvas.getContext("2d");

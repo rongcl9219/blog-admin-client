@@ -7,5 +7,6 @@ declare module "@vue/runtime-core" {
         $loading: ElLoading;
         $confirm: ElMessageBox.confirm;
         $notify: ElNotification;
+        $viewer: any
     }
 }

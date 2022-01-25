@@ -1,6 +1,6 @@
 <template>
-    <div id="webInfo">
-        <el-card class="box-card">
+    <div id="webInfo" v-loading="globalLoading" :element-loading-text="loadingText">
+        <el-card class="box-card" shadow="hover">
             <el-form ref="webInfoFormRef" :model="form" label-width="100px" label-suffix=":">
                 <el-form-item label="网站名称">
                     <el-input v-model="form.webUser"></el-input>
@@ -13,20 +13,26 @@
                 </el-form-item>
                 <el-form-item label="个人头像">
                     <template v-if="form.avatar.url">
-                        <div class="avatar_item">
-                            <img :src="form.avatar.url" alt="" />
-                        </div>
+                        <ViewImage :images="[form.avatar]" ref="viewImageAvatarRef">
+                            <template #default="scope">
+                                <div class="avatar_item" v-for="(item, index) in scope.images" :key="index">
+                                    <img :src="item.url" alt="">
+                                </div>
+                            </template>
+                        </ViewImage>
                     </template>
                     <el-button class="upload_avatar_btn" @click="uploadAvatarVisible = true">
                         <el-icon><Plus /></el-icon>
                     </el-button>
                 </el-form-item>
                 <el-form-item label="网站banner">
-                    <template v-if="webBannerUrl">
-                        <div class="avatar_item">
-                            <img :src="webBannerUrl" alt="" />
-                        </div>
-                    </template>
+                    <ViewImage :images="form.webBanner" ref="viewImageWebBannerRef">
+                        <template #default="scope">
+                            <div class="avatar_item" v-for="(item, index) in scope.images" :key="index">
+                                <img :src="item.url" alt="">
+                            </div>
+                        </template>
+                    </ViewImage>
                     <el-button class="upload_avatar_btn" @click="upLoadImgVisible = true">
                         <el-icon><Plus /></el-icon>
                     </el-button>
@@ -65,8 +71,8 @@
     float: left;
     width: 60px;
     height: 60px;
-    margin-right: 20px;
-    border-radius: 6px;
+    margin-right: 10px;
+    border-radius: 3px;
     overflow: hidden;
 
     img {
@@ -86,5 +92,11 @@
     border: 1px dashed #d9d9d9;
     color: #000;
     font-size: 20px;
+    transition: 0.3s;
+
+    &:hover {
+        color: var(--el-color-primary);
+        border-color: var(--el-color-primary);
+    }
 }
 </style>

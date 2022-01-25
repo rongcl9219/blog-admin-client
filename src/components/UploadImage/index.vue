@@ -6,13 +6,36 @@
         :close-on-press-escape="false"
         :show-close="false"
         :append-to-body="true"
-        @close="closeUpLoadImg"
         width="640px">
-        <div>
+        <template #default>
+            <ViewImage :images="fileList" ref="viewImageRef">
+                <template #default="scope">
+                    <div class="list_item" :style="imgStyle" v-for="(item, index) in scope.images" :key="index">
+                        <div class="list_content">
+                            <img :style="imgStyle" :src="item.url" alt="">
+                            <div class="preview_box" @click.stop="showImageView(index)">
+                                <el-button type="text" class="preview_img_icon">
+                                    <el-icon>
+                                        <View />
+                                    </el-icon>
+                                </el-button>
+                            </div>
+                        </div>
+                        <el-button type="danger"
+                                   class="remove_img"
+                                   circle
+                                   @click.stop="deleteImage(index)">
+                            <el-icon>
+                                <Close />
+                            </el-icon>
+                        </el-button>
+                    </div>
+                </template>
+            </ViewImage>
             <el-upload
+                class="upload_box"
                 ref="uploadImageRef"
                 action="/api/file/uploadImage"
-                accept=".jpg, .jpeg, .png"
                 :show-file-list="false"
                 list-type="picture"
                 name="file"
@@ -22,28 +45,15 @@
                 :on-change="fileChange"
                 :on-exceed="overRange"
                 :auto-upload="false">
-                <div class="list_item" :style="imgStyle" v-for="(item, index) in fileList" :key="index">
-                    <div class="list_content">
-                        <img :style="imgStyle" :src="item.url" alt="">
-                        <div class="preview_box">
-                            <el-button type="text" class="preview_img_icon">
-                                <el-icon><View /></el-icon>
-                            </el-button>
-                            <img class="preview_img" :style="imgStyle" :src="item.url" alt="">
-                        </div>
+                <template #default>
+                    <div v-show="!hideUpload" class="el-upload el-upload--picture-card upload_btn" :style="imgStyle">
+                        <el-icon>
+                            <Plus />
+                        </el-icon>
                     </div>
-                    <el-button type="danger"
-                               class="remove_img"
-                               circle
-                               @click="deleteImage(item)">
-                        <el-icon><Close /></el-icon>
-                    </el-button>
-                </div>
-                <div class="el-upload el-upload--picture-card upload_btn" :style="imgStyle">
-                    <el-icon><Plus /></el-icon>
-                </div>
+                </template>
             </el-upload>
-        </div>
+        </template>
         <template #footer>
             <div class="dialog-footer">
                 <el-button @click="closeUpLoadImg">取 消</el-button>
@@ -54,18 +64,20 @@
 </template>
 
 <script lang="ts">
-import {Vue, Options, Prop, Ref, Emit, Watch} from "vue-property-decorator";
+import { Vue, Options, Prop, Ref, Emit, Watch } from "vue-property-decorator";
 import { Md5 } from "ts-md5/dist/md5";
 import { CommonApi } from "@/api";
 import { getUuid } from "@/utils/tool";
 import { Plus, Close, View } from "@element-plus/icons";
 import { ElUpload } from "element-plus";
+import ViewImage from "@/components/ViewImage/index.vue";
 
 @Options({
     components: {
         Plus,
         Close,
-        View
+        View,
+        ViewImage
     }
 })
 export default class UploadImage extends Vue {
@@ -78,43 +90,52 @@ export default class UploadImage extends Vue {
 
     @Ref() readonly uploadImageRef!: typeof ElUpload;
 
+    @Ref() readonly viewImageRef!: ViewImage;
+
     @Watch("uploadImgVisible")
-    onUploadAvatarVisible(val: boolean) {
+    onUploadImgVisible(val: boolean) {
         this.dialogVisible = val;
     }
 
     @Emit("image-upload-success")
-    onCropUploadSuccess(fileObj: any) {
+    onImgUploadSuccess(fileObj: any) {
         return fileObj;
     }
+
     @Emit("image-upload-fail")
-    onCropUploadFail(error: any) {
+    onImgUploadFail(error: any) {
         return error;
     }
+
     @Emit("update:uploadImgVisible")
     onUploadImgVisibleChanged(visible: boolean) {
         return visible;
     }
+
     @Emit("update:imgList")
     onUploadImgListChanged(files: Array<any>) {
         return files;
     }
 
-    public dialogVisible:boolean = false;
+    public dialogVisible: boolean = false;
 
     get imgStyle() {
         let width = this.imgWidth;
         width = width < 50 ? 50 : width > 240 ? 240 : width;
-        let height = this.imgHeight
+        let height = this.imgHeight;
         height = height < 50 ? 50 : height > 240 ? 240 : height;
         return {
-            width: width + 'px',
-            height: height + 'px'
-        }
+            width: width + "px",
+            height: height + "px"
+        };
     }
 
     get limit() {
         return this.limitNum < 1 ? 1 : this.limitNum;
+    }
+
+    get hideUpload() {
+        return this.fileList.length === this.limit;
     }
 
     public isUpload: boolean = false;
@@ -128,6 +149,12 @@ export default class UploadImage extends Vue {
             return false;
         }
         this.isUpload = true;
+        const uploadLoading = this.$loading({
+            lock: true,
+            text: "上传中...",
+            spinner: "el-icon-loading",
+            background: "rgba(0, 0, 0, 0.7)"
+        });
 
         this.initImageData().then((fileData: any) => {
             return CommonApi.getUploadToken({
@@ -138,66 +165,74 @@ export default class UploadImage extends Vue {
                 let uploadArr: Array<any> = [];
                 files.map((file: any) => {
                     let formData = fileData.fileObj[file.key];
-                    formData.append('token', file.token);
+                    formData.append("token", file.token);
                     uploadArr.push(CommonApi.uploadImg(formData));
                     delete file.token;
                 });
-                return this.mergePromise(uploadArr).then((data: any) => {
+                return Promise.allSettled(uploadArr).then((data: any) => {
                     this.onUploadImgListChanged(files);
-                    this.onUploadImgVisibleChanged(false);
-                    this.onCropUploadSuccess({files, data});
+                    this.onImgUploadSuccess({ files, data });
+                    this.closeUpLoadImg();
                 });
             });
+        }).catch(error => {
+            console.error(error);
+            this.onImgUploadFail(error);
+            this.$msg.error("上传失败");
+        }).finally(() => {
+            this.isUpload = false;
+            uploadLoading.close();
         });
     }
+
     /**
      * 判断文件是否是图片
      * @param ext 文件后缀
      */
     isAssetTypeAnImage(ext: string) {
-        return [
-            'png', 'jpg', 'jpeg', 'bmp', 'gif', 'webp', 'psd', 'svg', 'tiff'].indexOf(ext.toLowerCase()) !== -1
+        // const imageExtArr = ["png", "jpg", "jpeg", "bmp", "gif", "webp", "psd", "svg", "tiff"];
+        return ["png", "jpg", "jpeg"].indexOf(ext.toLowerCase()) !== -1;
     }
-    closeUpLoadImg () {
+
+    closeUpLoadImg() {
         this.fileList = [];
         // 清除选择列表
-        this.uploadImageRef.clearFiles();
+        this.uploadImageRef && this.uploadImageRef.clearFiles();
         this.onUploadImgVisibleChanged(false);
     }
-    fileChange (file: any, fileList: Array<any>) {
+
+    fileChange(file: any, fileList: Array<any>) {
         // 获取最后一个.的位置
-        let index = file.name.lastIndexOf('.');
+        let index = file.name.lastIndexOf(".");
         // 获取后缀
         let ext = file.name.substr(index + 1);
         // 判断文件类型是否符合
         if (!this.isAssetTypeAnImage(ext)) {
-            this.$msg.error('只能上传jpg/jpeg/png文件!');
+            this.$msg.error("只能上传jpg/jpeg/png文件!");
             // 必须手动移除，不然已选择的文件还存在list中
-            this.uploadImageRef.uploadFiles = this.removeImage(file, fileList);
+            fileList.splice(-1, 1);
             return false;
         }
 
         // 判断文件大小是否符合
         if (!(file.size / 1024 / 1024 <= 5)) {
-            this.$msg.error('上传文件大小不能超过5MB!');
+            this.$msg.error("上传文件大小不能超过5MB!");
             // 必须手动移除，不然已选择的文件还存在list中
-            this.uploadImageRef.uploadFiles = this.removeImage(file, fileList);
-            return false
+            fileList.splice(-1, 1);
+            return false;
         }
         this.fileList = fileList;
     }
-    overRange () {
-        this.$msg.warning(`一次最多上传 ${this.limit} 张图片`)
+
+    overRange() {
+        this.$msg.warning(`最多上传 ${this.limit} 张图片`);
     }
-    deleteImage (file: any) {
-        this.fileList = this.removeImage(file, this.fileList);
+
+    deleteImage(index: number) {
+        this.fileList.splice(index, 1);
     }
-    removeImage (file: any, fileList: Array<any>) {
-        return fileList.filter(item => {
-            return item.uid !== file.uid;
-        });
-    }
-    initImageData () {
+
+    initImageData() {
         return new Promise((resolve) => {
             let fileObj: any = {};
             let keys: string[] = [];
@@ -205,43 +240,39 @@ export default class UploadImage extends Vue {
                 //  用FormData存放上传文件
                 let formData = new FormData();
                 let key = Md5.hashStr(getUuid());
-                formData.append('file', file.raw, key);
-                formData.append('key', key);
+                formData.append("file", file.raw, key);
+                formData.append("key", key);
                 keys.push(key);
                 fileObj[key] = formData;
             });
-            let keysStr = keys.join(',');
-            resolve({fileObj, keysStr});
+            let keysStr = keys.join(",");
+            resolve({ fileObj, keysStr });
         });
     }
-    mergePromise (ajaxArray: Array<any>) {
-        let p: any = Promise.resolve();
-        let arr: Array<any> = [];
-        ajaxArray.map((promise: any) => {
-            p = p.then(promise).then((data: any) => {
-                arr.push(data);
-                return arr;
-            });
-        });
-        return p;
+
+    showImageView(index: number) {
+        this.viewImageRef.show(index);
     }
 }
 </script>
 
 <style scoped lang="scss">
+.upload_box {
+    display: inline-block;
+}
+
 .upload_btn {
     float: left;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 0 5px 0;
+
     .el-icon {
         margin: 0;
     }
 }
 
 .list_item {
-    float: left;
     position: relative;
     display: inline-block;
     margin: 0 5px 5px 0;
