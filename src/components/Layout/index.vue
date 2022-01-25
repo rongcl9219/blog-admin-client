@@ -6,6 +6,7 @@
                 <NavBar />
             </div>
             <AppMain />
+            <Footer/>
         </div>
     </div>
 </template>
@@ -16,13 +17,15 @@ import { Getter } from "vuex-class";
 import SideBar from "./SideBar/index.vue";
 import NavBar from "./NavBar/index.vue";
 import AppMain from "./AppMain/index.vue";
+import Footer from "./Footer/index.vue";
 
 @Options({
     components: {
         SideBar,
         NavBar,
         AppMain,
-    },
+        Footer
+    }
 })
 export default class AdminLayout extends Vue {
     @Getter("setting/getSidebarOpen") isSidebarOpen: any;
@@ -30,7 +33,7 @@ export default class AdminLayout extends Vue {
     get classObj() {
         return {
             hideSidebar: this.isSidebarOpen,
-            openSidebar: !this.isSidebarOpen,
+            openSidebar: !this.isSidebarOpen
         };
     }
 }
@@ -44,11 +47,13 @@ export default class AdminLayout extends Vue {
     position: relative;
     height: 100%;
     width: 100%;
-    &.mobile.openSidebar{
+
+    &.mobile.openSidebar {
         position: fixed;
         top: 0;
     }
 }
+
 .drawer-bg {
     background: #000;
     opacity: 0.3;
