@@ -27,7 +27,7 @@ instance.interceptors.request.use(
         };
 
         // 添加请求头token
-        const { token, refreshToken, tokenExp } = store.state.common;
+        const {token, refreshToken, tokenExp} = store.state.common;
 
         if (/^(\/admin)/.test(request.url || "")) {
             if (token && tokenExp) {
@@ -43,7 +43,7 @@ instance.interceptors.request.use(
                         store
                             .dispatch("common/refreshToken")
                             .then((res) => {
-                                const { accessToken } = res.data;
+                                const {accessToken} = res.data;
                                 isRefreshing = false;
                                 request.headers = {
                                     authorization: `Bearer ${accessToken}`,
@@ -54,7 +54,7 @@ instance.interceptors.request.use(
                             .catch(() => {
                                 requestList = [];
                                 isRefreshing = false;
-                                router.replace({ path: "/403" }).then();
+                                router.replace({path: "/403"}).then();
                             });
                     }
 
@@ -91,7 +91,7 @@ instance.interceptors.response.use(
         const data = response.data;
         if (!data.status) {
             if (data.code === -4001) {
-                router.replace({ path: "/403" }).then();
+                router.replace({path: "/403"}).then();
             }
 
             return Promise.reject(response.data);

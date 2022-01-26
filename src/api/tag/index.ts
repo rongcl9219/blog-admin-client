@@ -1,4 +1,4 @@
-import Abstract from "@/utils/request/http";
+import Abstract from "@/core/request/http";
 import { Pagination } from "@/api/commonTypes";
 import { TagInfo } from "./types";
 

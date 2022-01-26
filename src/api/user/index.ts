@@ -1,4 +1,4 @@
-import Abstract from "@/utils/request/http";
+import Abstract from "@/core/request/http";
 import { UserInfo, UpdatePass } from "./types";
 
 /**

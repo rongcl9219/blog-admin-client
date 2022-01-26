@@ -14,18 +14,14 @@ import {
     cacheRefreshToken,
     cacheTokenExp,
     commentUserInfo,
-} from "@/utils/storageCache";
-import { CustomResponse } from "@/utils/request/type";
+} from "@/core/storageCache";
+import { CustomResponse } from "@/core/request/type";
 
 const actions: ActionTree<CommonState, RootState> = {
     /**
      * 刷新token
      */
-    async refreshToken({
-        dispatch,
-    }: {
-        dispatch: Dispatch;
-    }): Promise<CustomResponse> {
+    async refreshToken({dispatch,}: { dispatch: Dispatch; }): Promise<CustomResponse> {
         return new Promise((resove, reject) => {
             CommonApi.refreshToken()
                 .then((response) => {
@@ -40,8 +36,8 @@ const actions: ActionTree<CommonState, RootState> = {
     /**
      * 设置token
      */
-    setToken({ commit }: { commit: Commit }, tokenInfo: any): void {
-        const { accessToken, refreshToken, exp } = tokenInfo;
+    setToken({commit}: { commit: Commit }, tokenInfo: any): void {
+        const {accessToken, refreshToken, exp} = tokenInfo;
         const dateNow = new Date().getTime();
         const tokenExpireTime = dateNow + exp;
         commit(SET_TOKEN, accessToken);
@@ -54,7 +50,7 @@ const actions: ActionTree<CommonState, RootState> = {
     /**
      * 清除token
      */
-    clearToken({ commit }: { commit: Commit }): void {
+    clearToken({commit}: { commit: Commit }): void {
         commit(SET_TOKEN, null);
         commit(REFRESH_TOKEN, null);
         commit(SET_TOKEN_EXP, null);
@@ -65,14 +61,14 @@ const actions: ActionTree<CommonState, RootState> = {
     /**
      * 设置评论用户
      */
-    setCommentUser({ commit }: { commit: Commit }, commentUser: any): void {
+    setCommentUser({commit}: { commit: Commit }, commentUser: any): void {
         commit(SET_COMMENT_USER, commentUser);
         commentUserInfo.save(commentUser);
     },
     /**
      * 设置网站信息
      */
-    async setWebInfo({ commit }: { commit: Commit }): Promise<CustomResponse> {
+    async setWebInfo({commit}: { commit: Commit }): Promise<CustomResponse> {
         return new Promise((resolve, reject) => {
             CommonApi.getAsideInfo()
                 .then((response) => {

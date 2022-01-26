@@ -1,4 +1,4 @@
-import Abstract from "@/utils/request/http";
+import Abstract from "@/core/request/http";
 import { UploadToken } from "./types";
 
 /**
@@ -29,7 +29,7 @@ class CommonApi extends Abstract {
      * 刷新token
      */
     refreshToken = () => {
-        return this.fetchPost({ url: "/refreshToken" });
+        return this.fetchPost({url: "/refreshToken"});
     };
 
     /**
@@ -48,7 +48,7 @@ class CommonApi extends Abstract {
      * 获取侧边栏信息
      */
     getAsideInfo() {
-        return this.fetchGet({ url: "/getAsideInfo" });
+        return this.fetchGet({url: "/getAsideInfo"});
     }
 
     /**
@@ -69,7 +69,7 @@ class CommonApi extends Abstract {
     getComment(articleId: string) {
         return this.fetchGet({
             url: "/getComment",
-            params: { articleId }
+            params: {articleId}
         });
     }
 
@@ -77,7 +77,7 @@ class CommonApi extends Abstract {
      * 获取时间线数据
      */
     getTimeLine() {
-        return this.fetchGet({ url: "/getTimeLine" });
+        return this.fetchGet({url: "/getTimeLine"});
     }
 }
 

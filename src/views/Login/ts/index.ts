@@ -4,7 +4,7 @@ import { ElForm } from "element-plus";
 import ValidCode from "@/components/ValidCode/index.vue";
 import { UserApi } from "@/api";
 import { LoginForm, ValidCodeModel, FormRule } from "./types";
-import { CustomResponse } from "@/utils/request/type";
+import { CustomResponse } from "@/core/request/type";
 
 @Options({
     components: {

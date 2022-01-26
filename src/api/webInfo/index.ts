@@ -1,4 +1,4 @@
-import Abstract from "@/utils/request/http";
+import Abstract from "@/core/request/http";
 
 /**
  * @description 网站信息接口

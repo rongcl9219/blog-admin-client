@@ -1,6 +1,6 @@
 import { Commit, Dispatch, ActionTree } from "vuex";
 import { UserApi } from "@/api";
-import { CustomResponse } from "@/utils/request/type";
+import { CustomResponse } from "@/core/request/type";
 import { UserState } from "./states";
 import { RootState } from "../../index.d";
 import {
@@ -13,11 +13,8 @@ const actions: ActionTree<UserState, RootState> = {
     /**
      * 用户登录
      */
-    login(
-        { dispatch }: { dispatch: Dispatch },
-        userInfo: any
-    ): Promise<CustomResponse> {
-        const { username, password } = userInfo;
+    login({dispatch}: { dispatch: Dispatch }, userInfo: any): Promise<CustomResponse> {
+        const {username, password} = userInfo;
         return new Promise<CustomResponse>((resolve, reject) => {
             UserApi.login(username, password)
                 .then((response) => {
@@ -34,11 +31,11 @@ const actions: ActionTree<UserState, RootState> = {
     /**
      * 获取用户信息
      */
-    getUserInfo({ commit }: { commit: Commit }): Promise<CustomResponse> {
+    getUserInfo({commit}: { commit: Commit }): Promise<CustomResponse> {
         return new Promise<CustomResponse>((resolve, reject) => {
             UserApi.getUserInfo()
                 .then((response) => {
-                    const { userName, avatarUrl } = response.data.userInfo;
+                    const {userName, avatarUrl} = response.data.userInfo;
                     commit(SET_USERNAME, userName);
                     commit(SET_AVATAR, avatarUrl);
                     resolve(response);
@@ -51,14 +48,8 @@ const actions: ActionTree<UserState, RootState> = {
     /**
      * 退出登录
      */
-    loginOut({
-        commit,
-        dispatch,
-    }: {
-        commit: Commit;
-        dispatch: Dispatch;
-    }): Promise<CustomResponse> {
-        dispatch("common/clearToken", {}, { root: true }).then();
+    loginOut({commit, dispatch,}: { commit: Commit; dispatch: Dispatch; }): Promise<CustomResponse> {
+        dispatch("common/clearToken", {}, {root: true}).then();
         commit(RESET_USER_STATE);
         return new Promise<CustomResponse>((resolve, reject) => {
             UserApi.loginOut()
@@ -70,7 +61,7 @@ const actions: ActionTree<UserState, RootState> = {
                 });
         });
     },
-    setUserAvatar({commit}: {commit: Commit}, avatarUrl: string): void {
+    setUserAvatar({commit}: { commit: Commit }, avatarUrl: string): void {
         commit(SET_AVATAR, avatarUrl)
     }
 };

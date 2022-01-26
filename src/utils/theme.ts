@@ -1,4 +1,4 @@
-import { cacheThemeInfo } from "@/utils/storageCache";
+import { cacheThemeInfo } from "@/core/storageCache";
 import NProgress from "nprogress";
 
 // 变量前缀

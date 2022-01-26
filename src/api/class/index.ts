@@ -1,4 +1,4 @@
-import Abstract from "@/utils/request/http";
+import Abstract from "@/core/request/http";
 import { Pagination } from "@/api/commonTypes";
 import { ClassInfo } from "./types";
 
@@ -46,7 +46,7 @@ class ClassApi extends Abstract {
     deleteClass(classId: string) {
         return this.fetchPost({
             url: "/admin/deleteClass",
-            data: { classId },
+            data: {classId},
         });
     }
 
@@ -57,7 +57,7 @@ class ClassApi extends Abstract {
     getClassInfo(classId: string) {
         return this.fetchGet({
             url: "/admin/getClassInfo",
-            params: { classId },
+            params: {classId},
         });
     }
 

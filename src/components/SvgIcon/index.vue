@@ -7,7 +7,9 @@
 <script lang="ts">
 import { Vue, Options, Prop } from "vue-property-decorator";
 
-@Options({})
+@Options({
+    name: "svg-icon"
+})
 export default class SvgIcon extends Vue {
     @Prop({ type: String, default: "", required: true }) iconClass: string;
     @Prop({ type: String, default: "" }) className: string;

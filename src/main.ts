@@ -3,22 +3,21 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import resetMessage from "@/utils/resetMessage";
-
-import ElementPlus from "element-plus";
-import "element-plus/theme-chalk/src/index.scss";
-import "@/style/theme/index.scss";
-import "@/style/reset.scss";
-
-import "@/svg";
-
-import SvgIcon from "@/components/SvgIcon/index.vue";
+import * as Core from "@/core/utils";
+import globalUIComponents from "@/global/UIComponents";
+import globalComponents from "@/global/components";
+import globalDirectives from "@/global/directives";
+import globalMixins from "@/global/mixins";
 
 const app = createApp(App);
 
 app.config.globalProperties.$msg = resetMessage;
 
-app.component("svg-icon", SvgIcon)
-    .use(ElementPlus, { size: "small" })
+Core.components(app, globalComponents);
+Core.directives(app, globalDirectives);
+Core.mixin(app, globalMixins);
+
+app.use(globalUIComponents, { size: "small" })
     .use(store)
     .use(router)
     .mount("#app");

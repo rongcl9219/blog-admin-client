@@ -1,4 +1,4 @@
-import Abstract from "@/utils/request/http";
+import Abstract from "@/core/request/http";
 import { ArticleList, ArticleInfo } from "./types";
 
 /**
@@ -23,7 +23,7 @@ class ArticleApi extends Abstract {
     getArticleInfo(articleId: string) {
         return this.fetchGet({
             url: "/getArticleInfo",
-            params: { articleId },
+            params: {articleId},
         });
     }
 
@@ -34,7 +34,7 @@ class ArticleApi extends Abstract {
     getContent(articleId: string) {
         return this.fetchPost({
             url: "/getContent",
-            params: { articleId },
+            params: {articleId},
         });
     }
 
@@ -68,7 +68,7 @@ class ArticleApi extends Abstract {
     saveContent(articleId: string, articledContent: string) {
         return this.fetchPost({
             url: "/admin/saveContent",
-            data: { articleId, articledContent },
+            data: {articleId, articledContent},
         });
     }
 
@@ -79,7 +79,7 @@ class ArticleApi extends Abstract {
     deleteArticle(articleId: string) {
         return this.fetchGet({
             url: "/admin/deleteArticle",
-            params: { articleId },
+            params: {articleId},
         });
     }
 
@@ -90,7 +90,7 @@ class ArticleApi extends Abstract {
     recoverArticle(articleId: string) {
         return this.fetchGet({
             url: "/admin/recoverArticle",
-            params: { articleId },
+            params: {articleId},
         });
     }
 
@@ -102,7 +102,7 @@ class ArticleApi extends Abstract {
     updatePublish(articleId: string, isPublish: number) {
         return this.fetchGet({
             url: "/admin/updatePublish",
-            params: { articleId, isPublish },
+            params: {articleId, isPublish},
         });
     }
 

@@ -1,5 +1,5 @@
 import { AxiosRequestConfig, AxiosResponse } from "axios";
-import instance from "@/utils/request/intercept";
+import instance from "./intercept";
 import { CustomResponse } from "./type";
 
 class Abstract {

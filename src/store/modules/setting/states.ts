@@ -1,4 +1,4 @@
-import { cacheThemeInfo } from "@/utils/storageCache";
+import { cacheThemeInfo } from "@/core/storageCache";
 
 export interface SettingState {
     sidebarOpen?: boolean;

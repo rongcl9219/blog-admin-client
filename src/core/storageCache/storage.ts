@@ -1,7 +1,7 @@
 import Cache from "web-storage-cache";
 
 const lsCache = new Cache();
-const ssCache = new Cache({ storage: "sessionStorage" });
+const ssCache = new Cache({storage: "sessionStorage"});
 
 /**
  * 本地存储类
@@ -22,7 +22,7 @@ class StorageCache {
      * @param value
      */
     save(value: any) {
-        const options = this.exp ? { exp: this.exp } : null;
+        const options = this.exp ? {exp: this.exp} : null;
         this.storage.set(this.key, value, options);
     }
 
