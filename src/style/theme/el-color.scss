@@ -9,16 +9,21 @@
 
 /* 核心组件的变量，下面这些样式是必须要写的 */
 
-.el-tag--light {
-    --el-tag-background-color: var(--el-color-primary-light-9);
-    --el-tag-border-color: var(--el-color-primary-light-8);
-    --el-tag-font-color: var(--el-color-primary);
-    --el-tag-hover-color: var(--el-color-primary);
-}
+//.el-tag--light {
+//    --el-tag-background-color: var(--el-color-primary-light-9);
+//    --el-tag-border-color: var(--el-color-primary-light-8);
+//    --el-tag-font-color: var(--el-color-primary);
+//    --el-tag-hover-color: var(--el-color-primary);
+//}
 
 .el-button--default:active {
-    color: var(--el-color-primary-dark);
+    //color: var(--el-color-primary-dark);
     border-color: var(--el-color-primary-dark);
+}
+
+.el-button--text:active {
+    color: var(--el-color-primary-dark);
+    border-color: transparent;
 }
 
 .el-link.el-link--primary:hover {

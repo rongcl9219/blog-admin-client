@@ -1,8 +1,9 @@
 import { Vue, Options, Ref } from "vue-property-decorator";
 import { TagApi, ClassApi } from "@/api";
+import { ClassInfo } from "@/api/class/types";
 import { TagInfo } from "@/api/tag/types";
 import { ElForm } from "element-plus";
-import { CirclePlus, Delete, Edit } from "@element-plus/icons";
+import { CirclePlus, Delete, Edit } from "@element-plus/icons-vue";
 import { Pagination, DialogModel, FormRule } from "./types";
 
 @Options({
@@ -50,10 +51,10 @@ export default class TagAdmin extends Vue {
         ],
     };
 
-    public classTypeOptions: Array<any> = [];
+    public classTypeOptions: Array<ClassInfo> = [];
 
     public tagForm: TagInfo = {
-        tagId: "",
+        tagId: 0,
         tagName: "",
         tagDesc: "",
         classType: "",
@@ -105,7 +106,7 @@ export default class TagAdmin extends Vue {
     }
 
     closeTagDiaLog() {
-        this.tagForm.tagId = "";
+        this.tagForm.tagId = 0;
         this.tagForm.classType = "";
         this.tagForm.tagDesc = "";
         this.tagFormRef.resetFields();

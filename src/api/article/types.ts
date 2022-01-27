@@ -19,7 +19,7 @@ export interface ArticleInfo {
     articleSubtitle?: string;
     articleKeyword: string;
     articleInfo: string;
-    articleCover: string;
-    classType: string;
-    tagType: string;
+    articleCover: string | Array<any>;
+    classType: string | number[];
+    tagType: string | number[];
 }

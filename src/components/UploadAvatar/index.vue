@@ -128,7 +128,7 @@
 import { Vue, Options, Prop, Ref, Emit, Watch } from "vue-property-decorator";
 import { Md5 } from "ts-md5/dist/md5";
 import { CommonApi } from "@/api";
-import { Close } from "@element-plus/icons";
+import { Close } from "@element-plus/icons-vue";
 
 interface Scale {
     zoomAddOn: boolean; // 按钮缩放事件开启

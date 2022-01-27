@@ -1,9 +1,9 @@
 <template>
     <div class="choose-theme">
-        <svg-icon icon-class="theme"></svg-icon>
+        <svg-icon icon-class="theme"/>
         <el-color-picker
-            class="theme-picker"
             v-model="themeColor"
+            :predefine="predefineColors"
             @change="changeTheme"
         />
     </div>
@@ -15,6 +15,18 @@ import { setTheme, themeColor } from "@/utils/theme.ts";
 
 @Options({})
 export default class ThemePicker extends Vue {
+    // 预设颜色
+    predefineColors: string[] = [
+        "#ff4500",
+        "#ff8c00",
+        "#ffd700",
+        "#90ee90",
+        "#00ced1",
+        "#1e90ff",
+        "#c71585",
+        "#feabba"
+    ];
+
     // 默认颜色
     private defaultColor = "#409eff";
 
@@ -46,7 +58,7 @@ export default class ThemePicker extends Vue {
         font-size: 24px;
     }
 
-    .theme-picker {
+    .el-color-picker {
         position: absolute;
         top: 0;
         left: 0;

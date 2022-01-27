@@ -35,7 +35,7 @@
 import { Vue, Options } from "vue-class-component";
 import iconList from "./icons";
 import clipboard from "@/utils/clipboard";
-import * as elIcons from "@element-plus/icons";
+import * as elIcons from "@element-plus/icons-vue";
 
 @Options({
     components: {
@@ -82,7 +82,7 @@ export default class Icons extends Vue {
     display: grid;
     border-radius: 4px;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    max-height: calc(100vh - 160px);
+    max-height: calc(100vh - 185px);
     overflow-x: hidden;
     overflow-y: auto;
     @include scrollBar;
@@ -119,6 +119,11 @@ export default class Icons extends Vue {
         top: 0;
         left: 0;
         opacity: 0;
+    }
+
+    .icon {
+        max-width: 100%;
+        max-height: 100%;
     }
 }
 </style>

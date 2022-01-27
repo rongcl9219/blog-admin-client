@@ -11,7 +11,7 @@
                 >
                 </el-option>
             </el-select>
-            <el-button style="margin-left: 15px;" type="primary">新建</el-button>
+            <el-button style="margin-left: 15px;" type="primary" @click="openArticleDrawer(false)">新建</el-button>
         </div>
         <template v-if="articleList.length === 0">
             <NoData />
@@ -49,7 +49,7 @@
                                     <el-button type="text" @click="reversalArticle(article.articleId)">恢复删除</el-button>
                                 </template>
                                 <template v-else-if="articleStatus === 0 || articleStatus === 2">
-                                    <el-button type="text">编辑信息</el-button>
+                                    <el-button type="text" @click="openArticleDrawer(true, article.articleId)">编辑信息</el-button>
                                     <el-button type="text">编辑文章</el-button>
                                     <el-popover
                                         placement="bottom"
@@ -62,7 +62,7 @@
                                             </el-button>
                                         </template>
                                         <template #default>
-                                            <el-button type="danger" round size="mini" @click="removeArticle(article.articleId)">删除</el-button>
+                                            <el-button type="danger" round @click="removeArticle(article.articleId)">删除</el-button>
                                         </template>
                                     </el-popover>
                                 </template>
@@ -80,7 +80,95 @@
                 :total="pagination.total">
             </el-pagination>
         </template>
+
+        <el-drawer v-model="articleDialog.visible"
+                   @close="closeArticleDrawer"
+                   :size="600">
+            <template #title>
+                <h4>{{ articleDialog.title }}</h4>
+            </template>
+            <template #default>
+                <el-scrollbar>
+                    <el-form :model="articleForm" status-icon :rules="formRules"
+                             ref="articleFormRef"
+                             v-loading="articleDialog.formLoading"
+                             label-width="100px">
+                        <el-form-item label="文章标题" prop="articleTitle">
+                            <el-input type="text" v-model="articleForm.articleTitle"
+                                      autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="文章关键词">
+                            <el-input type="text" v-model="articleForm.articleKeyword"
+                                      autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="文章简介" prop="articleInfo">
+                            <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}"
+                                      v-model="articleForm.articleInfo"
+                                      autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="文章封面" prop="articleCover">
+                            <template v-if="articleForm.articleCover.length > 0">
+                                <div
+                                    style="float: left; width: 60px; height: 60px; margin-right: 20px; border-radius: 6px; overflow: hidden;">
+                                    <img style="width: 100%; height: 100%; cursor: pointer;"
+                                         :src="articleForm.articleCover[0].url" alt="">
+                                </div>
+                            </template>
+                            <el-button type="primary"
+                                       @click="articleDialog.uploadImgVisible = true">上传封面
+                            </el-button>
+                        </el-form-item>
+                        <el-form-item label="所属类型" prop="classType">
+                            <el-select v-model="articleForm.classType"
+                                       style="width: 100%"
+                                       multiple
+                                       @visible-change="classTypeChange"
+                                       @remove-tag="classTypeRemove"
+                                       placeholder="请选择">
+                                <el-option
+                                    v-for="item in classTypeOptions"
+                                    :key="item.classId"
+                                    :label="item.className"
+                                    :value="item.classId">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="文章标签" prop="tagType">
+                            <el-select v-model="articleForm.tagType"
+                                       style="width: 100%"
+                                       no-data-text="无数据"
+                                       multiple
+                                       placeholder="请选择">
+                                <el-option
+                                    v-for="item in articleDialog.tagTypeOptions"
+                                    :key="item.tagId"
+                                    :label="item.tagName"
+                                    :value="item.tagId">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-form>
+                </el-scrollbar>
+            </template>
+            <template #footer>
+                <div style="flex: auto">
+                    <el-button @click="articleDialog.visible = false">取消</el-button>
+                    <el-button type="primary" @click="submitArticle" :loading="articleDialog.btnLoading">
+                        {{ articleDialog.btnLoading ? '保存中...' : '保存' }}
+                    </el-button>
+                </div>
+            </template>
+        </el-drawer>
+
+        <UploadImage v-model:imgList="articleForm.articleCover"
+                     v-model:uploadImgVisible="articleDialog.uploadImgVisible"
+                     :imgWidth="100"
+                     :imgHeight="100"
+                     thumbnail="articleCover"
+                     @image-upload-success="imageUploadSuccess"
+                     :limitNum="1"></UploadImage>
     </div>
+
 </template>
 
 <script src="./ts/index.ts"></script>
@@ -158,6 +246,9 @@
                 object-position: center;
             }
         }
+    }
+    .el-tag {
+        margin-right: 5px;
     }
 }
 .el-popover.el-popper {

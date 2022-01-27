@@ -68,7 +68,7 @@ import { Vue, Options, Prop, Ref, Emit, Watch } from "vue-property-decorator";
 import { Md5 } from "ts-md5/dist/md5";
 import { CommonApi } from "@/api";
 import { getUuid } from "@/utils/tool";
-import { Plus, Close, View } from "@element-plus/icons";
+import { Plus, Close, View } from "@element-plus/icons-vue";
 import { ElUpload } from "element-plus";
 import ViewImage from "@/components/ViewImage/index.vue";
 
@@ -152,7 +152,6 @@ export default class UploadImage extends Vue {
         const uploadLoading = this.$loading({
             lock: true,
             text: "上传中...",
-            spinner: "el-icon-loading",
             background: "rgba(0, 0, 0, 0.7)"
         });
 

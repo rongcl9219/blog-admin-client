@@ -51,7 +51,6 @@
                 <template #header>
                     <el-button
                         type="primary"
-                        size="mini"
                         @click="openClassDialog(true)"
                     >
                         <el-icon><CirclePlus /></el-icon>

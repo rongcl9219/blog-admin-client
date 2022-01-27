@@ -1,11 +1,13 @@
-import { Vue, Options } from "vue-property-decorator";
+import { Vue, Options, Ref } from "vue-property-decorator";
 import * as types from "./types";
 import { ArticleInfo } from "@/api/article/types.ts";
 import { TagInfo } from "@/api/tag/types";
 import { ClassInfo } from "@/api/class/types";
 import { TagApi, ClassApi, ArticleApi } from "@/api";
 import NoData from "@/components/NoData/index.vue";
-import { Promotion } from "@element-plus/icons";
+import { Promotion } from "@element-plus/icons-vue";
+import { ElForm } from "element-plus";
+import UploadImage from "@/components/UploadImage/index.vue";
 
 interface Article extends ArticleInfo {
     isPublish: number;
@@ -14,12 +16,14 @@ interface Article extends ArticleInfo {
     isDelete: number;
     classTypeList: Array<ClassInfo>;
     tagTypeList: Array<TagInfo>;
+    articleCoverInfo: any;
 }
 
 @Options({
     components: {
         NoData,
-        Promotion
+        Promotion,
+        UploadImage
     }
 })
 export default class ArticleAdmin extends Vue {
@@ -63,9 +67,9 @@ export default class ArticleAdmin extends Vue {
         articleSubtitle: "",
         articleKeyword: "",
         articleInfo: "",
-        articleCover: "",
-        classType: "",
-        tagType: ""
+        articleCover: [],
+        classType: [],
+        tagType: []
     };
     public formRules: types.FormRule = {
         articleTitle: [
@@ -89,6 +93,8 @@ export default class ArticleAdmin extends Vue {
         articleContent: "",
         mavonEditorVisible: false
     };
+
+    @Ref("articleFormRef") readonly articleFormRef!: typeof ElForm;
 
     getArticle(page: number) {
         this.pageLoading = this.$loading();
@@ -142,6 +148,116 @@ export default class ArticleAdmin extends Vue {
         }).catch(() => {
             this.$msg.error("删除失败");
         });
+    }
+
+    classTypeChange() {
+        this.articleDialog.tagTypeOptions = [];
+        const tagTypeOptionId: Array<any> = [];
+        this.allTagList.forEach(tag => {
+            if ((this.articleForm.classType as Array<number>).indexOf(Number(tag.classType)) > -1) {
+                this.articleDialog.tagTypeOptions.push(tag);
+                tagTypeOptionId.push(tag.tagId);
+            }
+        });
+        if (this.articleForm.tagType.length > 0) {
+            this.articleForm.tagType = (this.articleForm.tagType as Array<number>).filter(tag => {
+                return tagTypeOptionId.indexOf(tag) > -1;
+            });
+        }
+    }
+
+    classTypeRemove(val: number) {
+        const tagArr = this.allTagList.reduce((arr: Array<any>, cur: TagInfo) => {
+            if (Number(cur.classType) === val) {
+                arr.push(cur.tagId);
+            }
+            return arr;
+        }, []);
+
+        this.articleForm.tagType = (this.articleForm.tagType as Array<number>).filter(tag => {
+            return tagArr.indexOf(tag) === -1;
+        });
+    }
+
+    openArticleDrawer(isEdit: boolean, articleId?: string) {
+        this.articleDialog.isEdit = isEdit;
+        this.articleDialog.title = isEdit ? "编辑文章" : "新增文章";
+        this.articleDialog.visible = true;
+        if (isEdit && articleId) {
+            this.articleDialog.formLoading = true;
+            ArticleApi.getArticleInfo(articleId).then((res) => {
+                const data: Article = res.data;
+                this.articleForm = Object.assign({}, {
+                    articleId:  data.articleId,
+                    articleTitle: data.articleTitle,
+                    articleKeyword: data.articleKeyword,
+                    articleInfo: data.articleInfo,
+                    articleCover: [data.articleCoverInfo],
+                    classType: data.classType.toString().split(',').map(Number),
+                    tagType: data.tagType.toString().split(',').map(Number)
+                });
+                this.classTypeChange();
+            }).catch(() => {
+                this.$msg.error("获取文章信息失败");
+            }).finally(() => {
+                this.articleDialog.formLoading = false;
+            });
+        }
+    }
+
+    closeArticleDrawer() {
+        this.articleForm.articleId = "";
+        this.articleForm.articleKeyword = "";
+        this.articleForm.articleCover = [];
+        this.articleDialog.tagTypeOptions = [];
+        this.articleDialog.isEdit = false;
+        this.articleFormRef.resetFields();
+    }
+
+    submitArticle() {
+        if (this.articleDialog.btnLoading) {
+            return false;
+        }
+        this.articleDialog.btnLoading = true;
+
+        this.articleFormRef
+            .validate()
+            .then(() => {
+                const articleData: ArticleInfo = {
+                    articleTitle: this.articleForm.articleTitle,
+                    articleKeyword: this.articleForm.articleKeyword,
+                    articleInfo: this.articleForm.articleInfo,
+                    articleCover: this.articleForm.articleCover[0].key,
+                    classType: (this.articleForm.classType as Array<number>).join(','),
+                    tagType: (this.articleForm.tagType as Array<number>).join(',')
+                }
+                this.saveArticle(articleData).then(() => {
+                    this.$msg.success(`${this.articleDialog.title}成功`);
+                    const page = this.articleDialog.isEdit ? this.pagination.page : 1;
+                    this.getArticle(page);
+                    this.articleDialog.visible = false;
+                }).catch(() => {
+                    this.$msg.error(`${this.articleDialog.title}失败`);
+                }).finally(() => {
+                    this.articleDialog.btnLoading = false;
+                });
+            })
+            .catch(() => {
+                this.articleDialog.btnLoading = false;
+            });
+    }
+
+    saveArticle(articleData: ArticleInfo) {
+        if (this.articleDialog.isEdit && this.articleForm.articleId) {
+            articleData.articleId = this.articleForm.articleId;
+            return ArticleApi.editArticle(articleData);
+        } else {
+            return ArticleApi.newArticle(articleData);
+        }
+    }
+
+    imageUploadSuccess() {
+        this.articleFormRef.clearValidate("articleCover");
     }
 
     mounted() {

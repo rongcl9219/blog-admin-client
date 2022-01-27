@@ -157,7 +157,7 @@ import Breadcrumb from "@/components/Layout/Breadcrumb/index.vue";
 import Hamburger from "@/components/Layout/Hamburger/index.vue";
 import ThemePicker from "@/components/ThemePicker/index.vue";
 import UploadAvatar from "@/components/UploadAvatar/index.vue";
-import { CaretBottom } from "@element-plus/icons";
+import { CaretBottom } from "@element-plus/icons-vue";
 import { ElForm } from "element-plus";
 import { UserApi } from "@/api";
 

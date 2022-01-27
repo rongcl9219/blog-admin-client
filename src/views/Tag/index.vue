@@ -41,11 +41,10 @@
                 <template #header>
                     <el-button
                         type="primary"
-                        size="small"
                         @click="openTagDialog(true)"
                     >
                         <el-icon><CirclePlus /></el-icon>
-                        新增分类
+                        新增标签
                     </el-button>
                 </template>
                 <template #default="scope">

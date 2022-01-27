@@ -2,7 +2,7 @@ import { Vue, Options, Ref } from "vue-property-decorator";
 import { ClassApi } from "@/api";
 import { ClassInfo } from "@/api/class/types";
 import { ElForm } from "element-plus";
-import { CirclePlus, Delete, Edit } from "@element-plus/icons";
+import { CirclePlus, Delete, Edit } from "@element-plus/icons-vue";
 import { Pagination, DialogModel, FormRule, classTypeItem } from "./types";
 
 @Options({
@@ -41,7 +41,7 @@ export default class ClassAdmin extends Vue {
     ];
 
     public classForm: ClassInfo = {
-        classId: "",
+        classId: 0,
         classCode: "",
         className: "",
         classType: 0,
@@ -124,7 +124,7 @@ export default class ClassAdmin extends Vue {
     }
 
     public closeClassDiaLog(): void {
-        this.classForm.classId = "";
+        this.classForm.classId = 0;
         this.classForm.classType = 0;
         this.classForm.classDesc = "";
         this.classFormRef.resetFields();

@@ -1,7 +1,7 @@
 import { Options, Vue, Ref } from "vue-property-decorator";
 import { ElForm } from "element-plus";
 import UploadAvatar from "@/components/UploadAvatar/index.vue";
-import { Plus } from "@element-plus/icons";
+import { Plus } from "@element-plus/icons-vue";
 import UploadImage from "@/components/UploadImage/index.vue";
 import ViewImage from "@/components/ViewImage/index.vue";
 import { WebInfoApi } from "@/api";
