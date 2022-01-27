@@ -4,10 +4,26 @@ import { ArticleInfo } from "@/api/article/types.ts";
 import { TagInfo } from "@/api/tag/types";
 import { ClassInfo } from "@/api/class/types";
 import { TagApi, ClassApi, ArticleApi } from "@/api";
+import NoData from "@/components/NoData/index.vue";
+import { Promotion } from "@element-plus/icons";
 
-@Options({})
+interface Article extends ArticleInfo {
+    isPublish: number;
+    createUsername: string;
+    createDate: string;
+    isDelete: number;
+    classTypeList: Array<ClassInfo>;
+    tagTypeList: Array<TagInfo>;
+}
+
+@Options({
+    components: {
+        NoData,
+        Promotion
+    }
+})
 export default class ArticleAdmin extends Vue {
-    public pageLoading: boolean = false;
+    private pageLoading: any;
     public articleStatus: number = 0;
     public options: Array<types.Optinon> = [
         {
@@ -24,7 +40,7 @@ export default class ArticleAdmin extends Vue {
             label: "已删除"
         }
     ];
-    public articleList: Array<ArticleInfo> = [];
+    public articleList: Array<Article> = [];
     public allTagList: Array<TagInfo> = [];
     public classTypeOptions: Array<ClassInfo> = [];
     public pagination: types.Pagination = {
@@ -75,10 +91,7 @@ export default class ArticleAdmin extends Vue {
     };
 
     getArticle(page: number) {
-        if (this.pageLoading) {
-            return;
-        }
-        this.pageLoading = true;
+        this.pageLoading = this.$loading();
         ArticleApi.getArticleList({
             page: page,
             pageSize: this.pagination.pageSize,
@@ -91,7 +104,43 @@ export default class ArticleAdmin extends Vue {
         }).catch(() => {
             this.$msg.error("获取失败");
         }).finally(() => {
-            this.pageLoading = false;
+            this.pageLoading.close();
+        });
+    }
+
+    updateArticlePublish(articleId: string, isPublish: number) {
+        const tip = isPublish === 0 ? "发布" : "取消发布";
+        ArticleApi.updatePublish(articleId, isPublish).then(() => {
+            this.$msg.success(`${tip}成功`);
+            this.getArticle(1);
+        }).catch(() => {
+            this.$msg.error(`${tip}失败`);
+        });
+    }
+
+    removeArticle(articleId: string) {
+        this.$confirm("确定删除该文章？", "提示", {
+            type: "warning",
+            cancelButtonText: "取消",
+            confirmButtonText: "删除"
+        }).then(() => {
+            ArticleApi.deleteArticle(articleId).then(() => {
+                this.$msg.success("删除成功");
+                this.getArticle(1);
+            }).catch(() => {
+                this.$msg.error("删除失败");
+            });
+        }).catch(() => {
+            this.$msg.warning("取消删除");
+        });
+    }
+
+    reversalArticle(articleId: string) {
+        ArticleApi.recoverArticle(articleId).then(() => {
+            this.$msg.success("恢复成功");
+            this.getArticle(1);
+        }).catch(() => {
+            this.$msg.error("删除失败");
         });
     }
 
@@ -104,5 +153,6 @@ export default class ArticleAdmin extends Vue {
         TagApi.getAllTag().then(res => {
             this.allTagList = res.data;
         }).catch();
+        this.getArticle(1);
     }
 }
