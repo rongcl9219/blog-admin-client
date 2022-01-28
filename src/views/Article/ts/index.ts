@@ -8,6 +8,7 @@ import NoData from "@/components/NoData/index.vue";
 import { Promotion } from "@element-plus/icons-vue";
 import { ElForm } from "element-plus";
 import UploadImage from "@/components/UploadImage/index.vue";
+import MdEditor from "@/components/MdEditor/index.vue";
 
 interface Article extends ArticleInfo {
     isPublish: number;
@@ -23,11 +24,11 @@ interface Article extends ArticleInfo {
     components: {
         NoData,
         Promotion,
-        UploadImage
+        UploadImage,
+        MdEditor
     }
 })
 export default class ArticleAdmin extends Vue {
-    private pageLoading: any;
     public articleStatus: number = 0;
     public options: Array<types.Optinon> = [
         {
@@ -91,13 +92,13 @@ export default class ArticleAdmin extends Vue {
     public editContentModel: types.EditModel = {
         articleId: "",
         articleContent: "",
-        mavonEditorVisible: false
+        mdEditorVisible: false
     };
 
     @Ref("articleFormRef") readonly articleFormRef!: typeof ElForm;
 
     getArticle(page: number) {
-        this.pageLoading = this.$loading();
+        const pageLoading = this.$loading();
         ArticleApi.getArticleList({
             page: page,
             pageSize: this.pagination.pageSize,
@@ -110,7 +111,7 @@ export default class ArticleAdmin extends Vue {
         }).catch(() => {
             this.$msg.error("获取失败");
         }).finally(() => {
-            this.pageLoading.close();
+            pageLoading.close();
         });
     }
 
@@ -258,6 +259,47 @@ export default class ArticleAdmin extends Vue {
 
     imageUploadSuccess() {
         this.articleFormRef.clearValidate("articleCover");
+    }
+
+    openUpdateContent(articleId: string) {
+        const load = this.$loading();
+        this.editContentModel.articleId = articleId;
+
+        ArticleApi.getContent(articleId).then(res => {
+            this.editContentModel.articleContent = res.data.articleContent || "";
+        }).catch(() => {
+            this.$msg.error("获取内容失败");
+        }).finally(() => {
+            load.close();
+        });
+
+        this.editContentModel.mdEditorVisible = true;
+    }
+
+    closeUpdateContent() {
+        this.editContentModel.articleContent = "";
+        this.editContentModel.articleId = "";
+    }
+
+    saveArtilceContent() {
+        const load = this.$loading({
+            text: "保存中..."
+        });
+        ArticleApi.saveContent(this.editContentModel.articleId, this.editContentModel.articleContent).then(() => {
+            this.$notify({
+                type: "success",
+                message: "保存成功",
+                duration: 2000
+            });
+        }).catch(() => {
+            this.$notify({
+                type: "error",
+                message: "保存失败",
+                duration: 2000
+            });
+        }).finally(() => {
+            load.close();
+        });
     }
 
     mounted() {

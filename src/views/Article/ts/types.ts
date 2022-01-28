@@ -37,5 +37,5 @@ export interface FormRule {
 export interface EditModel {
     articleId: string;
     articleContent: string;
-    mavonEditorVisible: boolean;
+    mdEditorVisible: boolean;
 }

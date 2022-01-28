@@ -37,7 +37,7 @@
                     </span>
                 </el-form-item>
                 <el-form-item prop="validCode">
-                    <div style="display: flex; align-items: center">
+                    <div style="display: flex; align-items: center; width: 100%;">
                         <span class="login-icon" style="margin-right: 5px">
                             <svg-icon icon-class="verification-code" />
                         </span>

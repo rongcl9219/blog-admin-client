@@ -32,7 +32,7 @@ class ArticleApi extends Abstract {
      * @param articleId
      */
     getContent(articleId: string) {
-        return this.fetchPost({
+        return this.fetchGet({
             url: "/getContent",
             params: {articleId},
         });

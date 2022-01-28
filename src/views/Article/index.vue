@@ -14,7 +14,7 @@
             <el-button style="margin-left: 15px;" type="primary" @click="openArticleDrawer(false)">新建</el-button>
         </div>
         <template v-if="articleList.length === 0">
-            <NoData />
+            <NoData/>
         </template>
         <template v-else>
             <div class="article-list">
@@ -26,8 +26,8 @@
                                             :content="article.isPublish === 0 ? '未发布' : '已发布'"
                                             effect="customized">
                                     <span :style="{color: article.isPublish === 0 ? '#E6A23C' : '#67C23A', cursor: 'pointer'}"
-                                            @click="updateArticlePublish(article.articleId, article.isPublish)"
-                                    ><el-icon><Promotion /></el-icon></span>
+                                          @click="updateArticlePublish(article.articleId, article.isPublish)"
+                                    ><el-icon><Promotion/></el-icon></span>
                                 </el-tooltip>
                             </p>
                             <p class="article-keyword">{{ article.articleKeyword }}</p>
@@ -50,7 +50,7 @@
                                 </template>
                                 <template v-else-if="articleStatus === 0 || articleStatus === 2">
                                     <el-button type="text" @click="openArticleDrawer(true, article.articleId)">编辑信息</el-button>
-                                    <el-button type="text">编辑文章</el-button>
+                                    <el-button type="text" @click="openUpdateContent(article.articleId)">编辑文章</el-button>
                                     <el-popover
                                         placement="bottom"
                                         trigger="hover"
@@ -58,7 +58,7 @@
                                     >
                                         <template #reference>
                                             <el-button type="text">
-                                                <svg-icon icon-class="round-menu" />
+                                                <svg-icon icon-class="round-menu"/>
                                             </el-button>
                                         </template>
                                         <template #default>
@@ -167,6 +167,25 @@
                      thumbnail="articleCover"
                      @image-upload-success="imageUploadSuccess"
                      :limitNum="1"></UploadImage>
+
+        <el-dialog
+            v-model="editContentModel.mdEditorVisible"
+            title="标题"
+            fullscreen
+            center
+            :show-close="false"
+            @close="closeUpdateContent"
+            custom-class="markdown-content">
+            <template #default>
+                <MdEditor v-model:content="editContentModel.articleContent" @on-save="saveArtilceContent" />
+            </template>
+            <template #footer>
+                <div class="dialog-footer">
+                    <el-button @click="editContentModel.mdEditorVisible = false">返回</el-button>
+                    <el-button type="primary" @click="saveArtilceContent">保存</el-button>
+                </div>
+            </template>
+        </el-dialog>
     </div>
 
 </template>
@@ -229,16 +248,19 @@
 
     .article-item-right {
         text-align: right;
+
         .article-time {
             height: 24px;
             line-height: 24px;
             color: #999;
             font-size: 14px;
         }
+
         .article-cover {
             display: inline-block;
             width: 125px;
             height: 100px;
+
             img {
                 width: 100%;
                 height: 100%;
@@ -247,17 +269,30 @@
             }
         }
     }
+
     .el-tag {
         margin-right: 5px;
     }
 }
+
 .el-popover.el-popper {
     min-width: auto;
 }
+
 .el-popper {
     &.is-customized,
     .el-popper__arrow::before {
         background: linear-gradient(90deg, rgb(159, 229, 151), rgb(204, 229, 129));
+    }
+}
+
+.markdown-content {
+    .el-dialog__body {
+        height: calc(100vh - 175px);
+    }
+
+    #md-editor-v3 {
+        height: 100%;
     }
 }
 </style>
