@@ -66,7 +66,6 @@ export default class WebInfo extends Vue {
     }
 
     onSubmit() {
-        console.log(1);
         this.loadingText = "保存中...";
         this.globalLoading = true;
 
@@ -106,9 +105,7 @@ export default class WebInfo extends Vue {
             if (paramData.WEB_BANNER) {
                 this.form.webBanner.push(paramData.WEB_BANNER);
             }
-        }).catch((error) => {
-            console.error(error);
-        }).finally(() => {
+        }).catch().finally(() => {
             this.globalLoading = false;
         });
     }

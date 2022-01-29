@@ -45,9 +45,7 @@ export default class ValidCode extends Vue {
             .then((res) => {
                 this.createCode(res.data.validCode);
             })
-            .catch((err) => {
-                console.error(err);
-            });
+            .catch();
     }
 
     private createCode(codeArr: string[]) {

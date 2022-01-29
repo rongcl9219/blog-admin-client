@@ -3,6 +3,8 @@ const resolve = dir => path.join(__dirname, dir);
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
 const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i;
 const IS_PROD = ["production", "prod"].includes(process.env.NODE_ENV);
+const Components = require("unplugin-vue-components/webpack");
+const { ElementPlusResolver } = require("unplugin-vue-components/resolvers");
 
 module.exports = {
     publicPath: "/",
@@ -11,7 +13,11 @@ module.exports = {
     runtimeCompiler: true,
     productionSourceMap: false,
     configureWebpack: (config) => {
-        const plugins = [];
+        const plugins = [
+            Components({
+                resolvers: [ElementPlusResolver()],
+            })
+        ];
 
         if (IS_PROD) {
             // 打包文件大小警告配置
@@ -31,9 +37,9 @@ module.exports = {
                 })
             );
             /* endregion */
-
-            config.plugins = [...config.plugins, ...plugins];
         }
+
+        config.plugins = [...config.plugins, ...plugins];
     },
     chainWebpack: (config) => {
         // html中添加cdn
@@ -65,6 +71,12 @@ module.exports = {
         if (IS_PROD) {
             // 移除 prefetch 插件
             config.plugins.delete("prefetch");
+
+            // 修复打包css分离顺序警告问题
+            config.plugin('extract-css').tap(options => {
+                options[0].ignoreOrder = true;
+                return options;
+            });
         }
 
         return config;

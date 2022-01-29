@@ -138,7 +138,11 @@ export default class ArticleAdmin extends Vue {
                 this.$msg.error("删除失败");
             });
         }).catch(() => {
-            this.$msg.warning("取消删除");
+            this.$msg({
+                showClose: true,
+                type: "warning",
+                message: "取消删除"
+            });
         });
     }
 

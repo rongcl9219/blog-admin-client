@@ -73,8 +73,7 @@ export default class MdEditor extends Vue {
                     }));
                 });
             });
-        }).catch(error => {
-            console.error(error);
+        }).catch(() => {
             this.$msg.error("上传失败");
         }).finally(() => {
             uploadLoading.close();

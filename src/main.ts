@@ -4,20 +4,24 @@ import router from "./router";
 import store from "./store";
 import resetMessage from "@/utils/resetMessage";
 import * as Core from "@/core/utils";
-import globalUIComponents from "@/global/UIComponents";
+import "@/global/UIComponents";
 import globalComponents from "@/global/components";
 import globalDirectives from "@/global/directives";
 import globalMixins from "@/global/mixins";
-import zhCn from "element-plus/es/locale/lang/zh-cn";
+
 const app = createApp(App);
 
+import { ElLoading, ElMessageBox, ElNotification } from "element-plus";
 app.config.globalProperties.$msg = resetMessage;
+app.config.globalProperties.$loading = ElLoading.service;
+app.config.globalProperties.$confirm = ElMessageBox.confirm;
+app.config.globalProperties.$notify = ElNotification;
+
 
 Core.components(app, globalComponents);
 Core.directives(app, globalDirectives);
 Core.mixin(app, globalMixins);
 
-app.use(globalUIComponents, {locale: zhCn})
-    .use(store)
+app.use(store)
     .use(router)
     .mount("#app");

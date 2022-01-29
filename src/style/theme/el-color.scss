@@ -22,7 +22,7 @@
 }
 
 .el-button--text:active {
-    color: var(--el-color-primary-dark);
+    color: var(--el-color-primary-dark) !important;
     border-color: transparent;
 }
 

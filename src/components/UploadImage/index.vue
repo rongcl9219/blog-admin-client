@@ -175,7 +175,6 @@ export default class UploadImage extends Vue {
                 });
             });
         }).catch(error => {
-            console.error(error);
             this.onImgUploadFail(error);
             this.$msg.error("上传失败");
         }).finally(() => {
