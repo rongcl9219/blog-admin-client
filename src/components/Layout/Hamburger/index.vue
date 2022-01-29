@@ -7,7 +7,9 @@
 <script lang="ts">
 import { Vue, Options, Prop } from "vue-property-decorator";
 
-@Options({})
+@Options({
+    name: "Hamburger"
+})
 export default class Hamburger extends Vue {
     @Prop({type: Boolean, default: false}) isActive: boolean;
 

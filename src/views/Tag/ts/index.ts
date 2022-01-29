@@ -7,6 +7,7 @@ import { CirclePlus, Delete, Edit } from "@element-plus/icons-vue";
 import { Pagination, DialogModel, FormRule } from "./types";
 
 @Options({
+    name: "TagAdmin",
     components: {
         CirclePlus,
         Delete,

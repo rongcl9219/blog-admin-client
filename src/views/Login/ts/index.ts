@@ -7,6 +7,7 @@ import { LoginForm, ValidCodeModel, FormRule } from "./types";
 import { CustomResponse } from "@/core/request/type";
 
 @Options({
+    name: "Login",
     components: {
         ValidCode,
     },

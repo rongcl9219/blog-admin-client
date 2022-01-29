@@ -35,7 +35,9 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 
-@Options({})
+@Options({
+    name: "NotFound"
+})
 export default class NotFound extends Vue {
     private msg: string = "访问的页面不存在";
     private tips: string =

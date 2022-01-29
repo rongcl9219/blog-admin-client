@@ -26,6 +26,7 @@ interface WebInfoForm {
 }
 
 @Options({
+    name: "WebInfo",
     components: {
         UploadAvatar,
         UploadImage,

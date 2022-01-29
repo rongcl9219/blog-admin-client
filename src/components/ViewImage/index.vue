@@ -9,7 +9,9 @@ import { Vue, Options, Prop, Watch } from "vue-property-decorator";
 import Viewer from "viewerjs";
 import "viewerjs/dist/viewer.css";
 
-@Options({})
+@Options({
+    name: "ViewImage"
+})
 export default class ViewImage extends Vue {
     @Prop({ type: Array, default: [] }) images: Array<string>;
     @Prop({ type: Boolean, default: false }) rebuild: boolean;

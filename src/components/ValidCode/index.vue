@@ -25,7 +25,9 @@ interface ValidCodeItem {
     transform: string;
 }
 
-@Options({})
+@Options({
+    name: "ValidCode"
+})
 export default class ValidCode extends Vue {
     @Prop({ type: String, default: "" }) validCode: string;
     @Prop({ type: Number, default: 150 }) width: number;

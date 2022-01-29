@@ -102,7 +102,9 @@ import { Vue, Options } from "vue-class-component";
 import { ArticleApi } from "@/api";
 import { formatDate } from "@/utils/tool";
 
-@Options({})
+@Options({
+    name: "AdminMain"
+})
 export default class AdminMain extends Vue {
     public githubArr: Array<any> = [
         { name: "博主网站首页", link: "http://rongcl.cn" },

@@ -53,7 +53,9 @@
 import { Vue, Options } from "vue-class-component";
 import { Getter } from "vuex-class";
 
-@Options({})
+@Options({
+    name: "SideBar"
+})
 export default class SideBar extends Vue {
     @Getter("setting/getSidebarOpen") isSidebarOpen: any;
 

@@ -1,8 +1,10 @@
 <template>
     <div class="app-main">
-        <router-view :key="key" v-slot="{ Component }">
+        <router-view v-slot="{ Component }">
             <transition name="fade-transform" mode="out-in">
-                <component :is="Component" />
+                <keep-alive>
+                    <component :is="Component" />
+                </keep-alive>
             </transition>
         </router-view>
     </div>
@@ -11,7 +13,9 @@
 <script lang="ts">
 import { Vue, Options } from "vue-class-component";
 
-@Options({})
+@Options({
+    name: "AppMain"
+})
 export default class AppMain extends Vue {
     get key() {
         return this.$route.path;

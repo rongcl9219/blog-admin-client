@@ -25,7 +25,9 @@
 import { Vue, Options, Watch } from "vue-property-decorator";
 import * as pathToRegexp from "path-to-regexp";
 
-@Options({})
+@Options({
+    name: "Breadcrumb"
+})
 export default class Breadcrumb extends Vue {
     public levelList: Array<any> = [];
 

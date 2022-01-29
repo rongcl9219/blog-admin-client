@@ -20,6 +20,7 @@ import AppMain from "./AppMain/index.vue";
 import Footer from "./Footer/index.vue";
 
 @Options({
+    name: "AdminLayout",
     components: {
         SideBar,
         NavBar,

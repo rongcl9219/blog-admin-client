@@ -38,6 +38,7 @@ import clipboard from "@/utils/clipboard";
 import * as elIcons from "@element-plus/icons-vue";
 
 @Options({
+    name: "IconsAdmin",
     components: {
         ...elIcons,
     },

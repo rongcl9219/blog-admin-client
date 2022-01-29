@@ -73,6 +73,7 @@ import { ElUpload } from "element-plus";
 import ViewImage from "@/components/ViewImage/index.vue";
 
 @Options({
+    name: "UploadImage",
     components: {
         Plus,
         Close,

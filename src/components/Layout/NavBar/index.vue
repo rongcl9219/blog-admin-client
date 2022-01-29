@@ -162,6 +162,7 @@ import { ElForm } from "element-plus";
 import { UserApi } from "@/api";
 
 @Options({
+    name: "NavBar",
     components: {
         Breadcrumb,
         Hamburger,

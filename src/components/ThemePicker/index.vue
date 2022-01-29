@@ -13,7 +13,9 @@
 import { Vue, Options } from "vue-class-component";
 import { setTheme, themeColor } from "@/utils/theme.ts";
 
-@Options({})
+@Options({
+    name: "ThemePicker"
+})
 export default class ThemePicker extends Vue {
     // 预设颜色
     predefineColors: string[] = [

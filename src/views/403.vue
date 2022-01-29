@@ -21,7 +21,9 @@
 import { Options, Vue } from "vue-class-component";
 import { Action } from "vuex-class";
 
-@Options({})
+@Options({
+    name: "RefuseError"
+})
 export default class RefuseError extends Vue {
     private loginPath: string = "/login";
     private msg: string = "您的请求被拒绝";

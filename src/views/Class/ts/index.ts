@@ -6,6 +6,7 @@ import { CirclePlus, Delete, Edit } from "@element-plus/icons-vue";
 import { Pagination, DialogModel, FormRule, classTypeItem } from "./types";
 
 @Options({
+    name: "ClassAdmin",
     components: {
         CirclePlus,
         Delete,

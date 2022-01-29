@@ -158,6 +158,7 @@ interface SourceImgMouseDown {
 }
 
 @Options({
+    name: "UploadAvatar",
     components: {
         Close
     }

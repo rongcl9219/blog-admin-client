@@ -21,6 +21,7 @@ interface Article extends ArticleInfo {
 }
 
 @Options({
+    name: "ArticleAdmin",
     components: {
         NoData,
         Promotion,
