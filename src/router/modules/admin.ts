@@ -26,7 +26,10 @@ const AdminWebInfo = () =>
     import(/* webpackChunkName: "web-info" */ "@/views/WebInfo/index.vue");
 
 const AdminIcons = () =>
-    import(/* webpackChunkName: "web-info" */ "@/views/Icons/index.vue");
+    import(/* webpackChunkName: "admin-icons" */ "@/views/Icons/index.vue");
+
+const ArticleView = () =>
+    import(/* webpackChunkName: "article-view" */ "@/views/ArticleView/index.vue");
 
 export default [
     {
@@ -95,5 +98,14 @@ export default [
                 },
             },
         ],
+    },
+    {
+        path: "/articleView",
+        name: "ArticleView",
+        component: ArticleView,
+        meta: {
+            requiresAuth: true,
+            title: "文章预览",
+        },
     },
 ];

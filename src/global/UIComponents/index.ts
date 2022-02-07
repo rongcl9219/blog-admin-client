@@ -11,5 +11,6 @@ import "@/style/element-plus-fix.scss"
 import "@/style/theme/index.scss";
 import "@/style/reset.scss";
 import "@/svg";
+import "@/assets/font/zcool/stylesheet.css";
 
 // export default ElementPlus;

@@ -3,6 +3,7 @@
                     :on-change="onChange"
                     :toolbars="toolbars"
                     :on-save="onContentSave"
+                    :previewOnly="previewOnly"
                     :on-upload-img="onUploadImg"></MarkdownEditor>
 </template>
 
@@ -23,6 +24,7 @@ import { CommonApi } from "@/api";
 })
 export default class MdEditor extends Vue {
     @Prop({ type: String, default: "" }) content: string;
+    @Prop({ type: Boolean, default: false }) previewOnly: boolean;
 
     @Emit("update:content")
     onContentChange(value: string) {
@@ -100,6 +102,14 @@ export default class MdEditor extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
+.md-preview-wrapper {
+    img {
+        cursor: zoom-in;
+    }
 
+    figure {
+        display: block;
+    }
+}
 </style>

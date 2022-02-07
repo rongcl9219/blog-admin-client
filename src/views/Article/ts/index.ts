@@ -307,6 +307,10 @@ export default class ArticleAdmin extends Vue {
         });
     }
 
+    goView(id: string) {
+        window.open(`/articleView?articleId=${id}`);
+    }
+
     mounted() {
         // 获取所有分类
         ClassApi.getAllClass().then(res => {

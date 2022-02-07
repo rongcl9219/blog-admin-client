@@ -1,13 +1,19 @@
 <template>
     <div class="no_data">
         <img :src="noDataImage" alt="">
-        <p>什么都没有</p>
+        <p>{{ noDateText }}</p>
     </div>
 </template>
 
 <script>
 export default {
     name: "NoData",
+    props: {
+        noDateText: {
+            type: String,
+            default: "什么都没有"
+        }
+    },
     data() {
         return {
             noDataImage: require("@/assets/images/default_img/no_data.png")
@@ -22,8 +28,9 @@ export default {
     text-align: center;
 
     p {
-        font-size: 20px;
-        color: #222222;
+        font-family: zcool-kuaile, sans-serif;
+        font-size: 24px;
+        color: var(--el-color-primary);
     }
 }
 </style>

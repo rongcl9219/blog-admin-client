@@ -41,7 +41,7 @@
                         </div>
                         <div class="article-item-right">
                             <p class="article-time">{{ article.createDate }}</p>
-                            <div class="article-cover">
+                            <div class="article-cover" @click="goView(article.articleId)">
                                 <img :src="article.articleCover" alt="">
                             </div>
                             <div class="item-info-oper">
@@ -187,7 +187,6 @@
             </template>
         </el-dialog>
     </div>
-
 </template>
 
 <script src="./ts/index.ts"></script>
