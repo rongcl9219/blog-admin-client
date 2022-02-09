@@ -15,6 +15,9 @@ import { toolbarArr } from "./config";
 import { Md5 } from "ts-md5";
 import { getUuid } from "@/utils/tool";
 import { CommonApi } from "@/api";
+import Viewer from "viewerjs";
+import { viewerDefaultOptions } from "@/components/ViewImage/config.ts";
+import 'viewerjs/dist/viewer.css';
 
 @Options({
     name: "MdEditor",
@@ -97,6 +100,14 @@ export default class MdEditor extends Vue {
             });
             let keysStr = keys.join(",");
             resolve({ fileObj, keysStr });
+        });
+    }
+
+    mounted() {
+        this.$nextTick(() => {
+            if (this.previewOnly) {
+                new Viewer(document.querySelector("#md-preview") as HTMLElement, viewerDefaultOptions);
+            }
         });
     }
 }

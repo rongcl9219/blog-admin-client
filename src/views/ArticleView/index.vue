@@ -160,7 +160,8 @@ export default class ArticleView extends Vue {
     }
 
     .article-body {
-        margin: 30px 0;
+        padding: 30px 0;
+        background-color: #ffffff;
     }
 
     .comment {

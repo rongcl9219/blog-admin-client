@@ -259,6 +259,7 @@
             display: inline-block;
             width: 125px;
             height: 100px;
+            cursor: pointer;
 
             img {
                 width: 100%;

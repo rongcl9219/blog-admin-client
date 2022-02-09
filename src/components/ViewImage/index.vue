@@ -7,6 +7,7 @@
 <script lang="ts">
 import { Vue, Options, Prop, Watch } from "vue-property-decorator";
 import Viewer from "viewerjs";
+import { viewerDefaultOptions } from "@/components/ViewImage/config.ts";
 import "viewerjs/dist/viewer.css";
 
 @Options({
@@ -18,29 +19,6 @@ export default class ViewImage extends Vue {
     @Prop({ type: Object, default: {} }) options: any;
 
     private viewerObj: any;
-
-    private defaultOptions: any = {
-        toolbar: {
-            zoomIn: false,
-            zoomOut: false,
-            oneToOne: false,
-            reset: false,
-            prev: 4,
-            play: {
-                show: false,
-                size: 'large',
-            },
-            next: 4,
-            rotateLeft: false,
-            rotateRight: false,
-            flipHorizontal: false,
-            flipVertical: false
-        },
-        keyboard: false,
-        movable: false,
-        rotatable: false,
-        initialViewIndex: 0
-    }
 
     @Watch("images", { deep: true })
     onImagesChanged() {
@@ -57,7 +35,7 @@ export default class ViewImage extends Vue {
     }
 
     get viewerOptions() {
-        return Object.assign({}, this.defaultOptions, this.options);
+        return Object.assign({}, viewerDefaultOptions, this.options);
     }
 
     onChange() {
